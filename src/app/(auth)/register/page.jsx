@@ -54,10 +54,13 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 flex items-center justify-center px-6 py-16">
-      <div className="w-full max-w-md">
-        <div className="bg-stone-100 p-10 rounded-xl border border-stone-200/60 shadow-sm">
-          <div className="mb-10 text-left">
+    <div className="min-h-screen bg-stone-50 relative flex items-center justify-center px-6 py-16 overflow-hidden">
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-stone-200/50 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="w-full max-w-md relative z-10">
+        <div className="backdrop-blur-xl bg-white/60 p-10 rounded-3xl border border-white/40 shadow-[0_8px_32px_0_rgba(0,0,0,0.04)]">
+          <div className="mb-8 text-left">
             <h1 className="text-3xl font-bold font-heading text-gray-900 tracking-tight mb-2">
               Create Account
             </h1>
@@ -68,18 +71,18 @@ const RegisterPage = () => {
 
           <Form className="space-y-5" onSubmit={onSubmit}>
             <TextField isRequired name="name" className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold text-gray-900 ml-1">
+              <span className="text-xs font-semibold text-gray-900 ml-3">
                 Full Name
               </span>
               <div className="relative flex items-center">
-                <RiUserLine className="absolute left-4 text-gray-500 text-lg z-10" />
+                <RiUserLine className="absolute left-5 text-gray-500 text-lg z-10" />
                 <Input
                   name="name"
                   placeholder="Enter your name"
-                  className="w-full pl-12 pr-4 h-12 bg-stone-50 border border-stone-200 rounded-lg text-gray-900 font-medium text-sm transition-all duration-150 focus:border-indigo-500 focus:bg-white"
+                  className="w-full pl-14 pr-5 h-12 bg-white/40 backdrop-blur-md border border-white/60 rounded-full text-gray-900 font-medium text-sm transition-all duration-200 focus:border-indigo-500 focus:bg-white/80 outline-none"
                 />
               </div>
-              <FieldError className="text-red-500 text-xs font-medium mt-1 ml-1" />
+              <FieldError className="text-red-500 text-xs font-medium mt-1 ml-3" />
             </TextField>
 
             <TextField
@@ -87,18 +90,18 @@ const RegisterPage = () => {
               name="photo"
               className="flex flex-col gap-1.5"
             >
-              <span className="text-xs font-semibold text-gray-900 ml-1">
+              <span className="text-xs font-semibold text-gray-900 ml-3">
                 Avatar URL
               </span>
               <div className="relative flex items-center">
-                <RiLinkM className="absolute left-4 text-gray-500 text-lg z-10" />
+                <RiLinkM className="absolute left-5 text-gray-500 text-lg z-10" />
                 <Input
                   name="photo"
                   placeholder="https://example.com/avatar.jpg"
-                  className="w-full pl-12 pr-4 h-12 bg-stone-50 border border-stone-200 rounded-lg text-gray-900 font-medium text-sm transition-all duration-150 focus:border-indigo-500 focus:bg-white"
+                  className="w-full pl-14 pr-5 h-12 bg-white/40 backdrop-blur-md border border-white/60 rounded-full text-gray-900 font-medium text-sm transition-all duration-200 focus:border-indigo-500 focus:bg-white/80 outline-none"
                 />
               </div>
-              <FieldError className="text-red-500 text-xs font-medium mt-1 ml-1" />
+              <FieldError className="text-red-500 text-xs font-medium mt-1 ml-3" />
             </TextField>
 
             <TextField
@@ -106,19 +109,19 @@ const RegisterPage = () => {
               name="email"
               className="flex flex-col gap-1.5"
             >
-              <span className="text-xs font-semibold text-gray-900 ml-1">
+              <span className="text-xs font-semibold text-gray-900 ml-3">
                 Email Address
               </span>
               <div className="relative flex items-center">
-                <RiMailLine className="absolute left-4 text-gray-500 text-lg z-10" />
+                <RiMailLine className="absolute left-5 text-gray-500 text-lg z-10" />
                 <Input
                   name="email"
                   type="email"
                   placeholder="name@example.com"
-                  className="w-full pl-12 pr-4 h-12 bg-stone-50 border border-stone-200 rounded-lg text-gray-900 font-medium text-sm transition-all duration-150 focus:border-indigo-500 focus:bg-white"
+                  className="w-full pl-14 pr-5 h-12 bg-white/40 backdrop-blur-md border border-white/60 rounded-full text-gray-900 font-medium text-sm transition-all duration-200 focus:border-indigo-500 focus:bg-white/80 outline-none"
                 />
               </div>
-              <FieldError className="text-red-500 text-xs font-medium mt-1 ml-1" />
+              <FieldError className="text-red-500 text-xs font-medium mt-1 ml-3" />
             </TextField>
 
             <TextField
@@ -126,11 +129,11 @@ const RegisterPage = () => {
               name="password"
               className="flex flex-col gap-1.5"
             >
-              <span className="text-xs font-semibold text-gray-900 ml-1">
+              <span className="text-xs font-semibold text-gray-900 ml-3">
                 Password
               </span>
-              <InputGroup className="w-full h-12 bg-stone-50 border border-stone-200 rounded-lg transition-all duration-150 overflow-hidden flex items-center focus-within:border-indigo-500 focus-within:bg-white">
-                <div className="pl-4 text-gray-500">
+              <InputGroup className="w-full h-12 bg-white/40 backdrop-blur-md border border-white/60 rounded-full transition-all duration-200 overflow-hidden flex items-center focus-within:border-indigo-500 focus-within:bg-white/80">
+                <div className="pl-5 text-gray-500">
                   <RiLockPasswordLine className="text-lg" />
                 </div>
                 <InputGroup.Input
@@ -139,13 +142,13 @@ const RegisterPage = () => {
                   placeholder="••••••••"
                   className="flex-1 px-3 bg-transparent border-none text-gray-900 font-medium text-sm outline-none"
                 />
-                <InputGroup.Suffix className="pr-2">
+                <InputGroup.Suffix className="pr-3">
                   <Button
                     isIconOnly
                     size="sm"
                     variant="light"
                     onPress={() => setIsVisible(!isVisible)}
-                    className="text-gray-500 hover:text-gray-900 transition-colors duration-150"
+                    className="text-gray-500 hover:text-gray-900 transition-colors duration-150 rounded-full"
                   >
                     {isVisible ? (
                       <RiEyeOffLine className="text-lg" />
@@ -155,12 +158,12 @@ const RegisterPage = () => {
                   </Button>
                 </InputGroup.Suffix>
               </InputGroup>
-              <FieldError className="text-red-500 text-xs font-medium mt-1 ml-1" />
+              <FieldError className="text-red-500 text-xs font-medium mt-1 ml-3" />
             </TextField>
 
             <Button
               type="submit"
-              className="w-full h-12 bg-indigo-500 text-white rounded-full font-medium text-sm flex items-center justify-center gap-2 hover:bg-indigo-600 transition-colors duration-150 mt-2"
+              className="w-full h-12 bg-indigo-500 text-white rounded-full font-medium text-sm flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all duration-150 shadow-md shadow-indigo-500/10 mt-2"
             >
               <span>Get Started</span>
               <RiArrowRightLine className="text-lg" />
@@ -169,10 +172,10 @@ const RegisterPage = () => {
 
           <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-stone-200" />
+              <div className="w-full border-t border-gray-200/50" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-stone-100 px-4 text-gray-500 font-medium text-xs">
+              <span className="bg-white/80 backdrop-blur-sm px-4 rounded-full border border-gray-100 text-gray-400 font-medium text-xs py-0.5">
                 or continue with
               </span>
             </div>
@@ -180,7 +183,7 @@ const RegisterPage = () => {
 
           <Button
             onClick={signInWithGoogle}
-            className="w-full h-12 bg-stone-50 text-gray-900 border border-stone-200 rounded-full font-medium text-sm flex items-center justify-center gap-2.5 hover:bg-stone-200 transition-colors duration-150"
+            className="w-full h-12 bg-white/50 hover:bg-white/80 backdrop-blur-md text-gray-900 border border-white/80 rounded-full font-medium text-sm flex items-center justify-center gap-2.5 transition-all duration-150 shadow-sm"
           >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path

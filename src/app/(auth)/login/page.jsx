@@ -1,16 +1,19 @@
 "use client";
+
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button, FieldError, Form, Input, TextField } from "@heroui/react";
 import {
-  IoMailOutline,
-  IoLockClosedOutline,
-  IoArrowForward,
-  IoAlertCircleOutline,
-} from "react-icons/io5";
+  RiArrowRightLine,
+  RiLockPasswordLine,
+  RiMailLine,
+} from "react-icons/ri";
 import { authClient } from "@/lib/auth-client";
-import { FieldError, Form, Input, TextField, toast } from "@heroui/react";
 
 const LoginPage = () => {
+  const router = useRouter();
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -23,11 +26,8 @@ const LoginPage = () => {
       callbackURL: "/",
     });
 
-    if (error) {
-      toast.danger("Authentication Failed", {
-        description: error.message,
-        indicator: <IoAlertCircleOutline size={20} />,
-      });
+    if (!error) {
+      router.push("/");
     }
   };
 
@@ -38,27 +38,23 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-zinc-50 flex items-center justify-center px-4 py-16">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-12">
-          <div className="flex justify-center items-center gap-2 mb-4">
-            <div className="h-0.5 w-8 bg-sky-900" />
-            <span className="text-sm font-black uppercase text-sky-900">
-              Credentials
-            </span>
-            <div className="h-0.5 w-8 bg-sky-900" />
-          </div>
-          <h1 className="text-5xl font-black text-zinc-900 uppercase leading-none">
-            Welcome Back
-          </h1>
-          <p className="text-zinc-400 font-bold mt-4 uppercase text-sm">
-            Access your global travel itinerary
-          </p>
-        </div>
+    <div className="min-h-screen bg-stone-50 relative flex items-center justify-center px-6 py-16 overflow-hidden">
+      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-stone-200/50 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="bg-white p-10 rounded-2xl border border-zinc-100 shadow-2xl shadow-sky-900/5">
+      <div className="w-full max-w-md relative z-10">
+        <div className="backdrop-blur-xl bg-white/60 p-10 rounded-3xl border border-white/40 shadow-[0_8px_32px_0_rgba(0,0,0,0.04)]">
+          <div className="mb-8 text-left">
+            <h1 className="text-3xl font-bold font-heading text-gray-900 tracking-tight mb-2">
+              Welcome Back
+            </h1>
+            <p className="text-gray-500 font-medium text-sm">
+              Sign in to continue your focus session.
+            </p>
+          </div>
+
           <Form
-            className="space-y-8"
+            className="space-y-5"
             onSubmit={onSubmit}
             validationBehavior="native"
           >
@@ -70,21 +66,22 @@ const LoginPage = () => {
                   ? "Invalid email format"
                   : null
               }
-              className="flex flex-col gap-2"
+              className="flex flex-col gap-1.5"
             >
-              <label className="text-sky-900 text-sm font-black uppercase ml-1">
+              <span className="text-xs font-semibold text-gray-900 ml-3">
                 Email Address
-              </label>
+              </span>
               <div className="relative flex items-center">
-                <IoMailOutline className="absolute left-4 text-zinc-400 size-5 z-10" />
+                <RiMailLine className="absolute left-4 text-gray-500 text-lg z-10" />
                 <Input
                   aria-label="email"
                   name="email"
-                  placeholder="NAME@EXAMPLE.COM"
-                  className="w-full pl-12 pr-4 h-14 bg-zinc-50/50 border border-zinc-100 rounded-xl text-zinc-900 font-bold text-[11px] uppercase transition-all hover:border-sky-900"
+                  type="email"
+                  placeholder="name@example.com"
+                  className="w-full pl-14 pr-5 h-12 bg-white/40 backdrop-blur-md border border-white/60 rounded-full text-gray-900 font-medium text-sm transition-all duration-200 focus:border-indigo-500 focus:bg-white/80 outline-none"
                 />
               </div>
-              <FieldError className="text-rose-500 text-[9px] font-black uppercase ml-1" />
+              <FieldError className="text-red-500 text-xs font-medium mt-1 ml-3" />
             </TextField>
 
             <TextField
@@ -93,47 +90,47 @@ const LoginPage = () => {
               validate={(value) =>
                 value.length < 8 ? "Minimum 8 characters" : null
               }
-              className="flex flex-col gap-2"
+              className="flex flex-col gap-1.5"
             >
-              <label className="text-sky-900 text-sm font-black uppercase ml-1">
-                Security Password
-              </label>
+              <span className="text-xs font-semibold text-gray-900 ml-3">
+                Password
+              </span>
               <div className="relative flex items-center">
-                <IoLockClosedOutline className="absolute left-4 text-zinc-400 size-5 z-10" />
+                <RiLockPasswordLine className="absolute left-4 text-gray-500 text-lg z-10" />
                 <Input
                   aria-label="Password"
                   type="password"
                   name="password"
                   placeholder="••••••••"
-                  className="w-full pl-12 pr-4 h-14 bg-zinc-50/50 border border-zinc-100 rounded-xl text-zinc-900 transition-all hover:border-sky-900"
+                  className="w-full pl-14 pr-5 h-12 bg-white/40 backdrop-blur-md border border-white/60 rounded-full text-gray-900 transition-all duration-200 focus:border-indigo-500 focus:bg-white/80 outline-none"
                 />
               </div>
-              <FieldError className="text-rose-500 text-[9px] font-black uppercase ml-1" />
+              <FieldError className="text-red-500 text-xs font-medium mt-1 ml-3" />
             </TextField>
 
-            <button
+            <Button
               type="submit"
-              className=" cursor-pointer w-full h-16 bg-sky-900 text-white rounded-xl font-black text-[11px] uppercase flex items-center justify-center gap-3 hover:bg-sky-800 transition-all shadow-xl shadow-sky-900/20"
+              className="w-full h-12 bg-indigo-500 text-white rounded-full font-medium text-sm flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all duration-150 shadow-md shadow-indigo-500/10 mt-2"
             >
-              Secure Login
-              <IoArrowForward size={16} />
-            </button>
+              <span>Secure Login</span>
+              <RiArrowRightLine className="text-lg" />
+            </Button>
           </Form>
 
-          <div className="relative my-10">
+          <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-zinc-100"></div>
+              <div className="w-full border-t border-gray-200/50" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-white px-4 text-zinc-300 font-black uppercase text-[9px]">
-                or
+              <span className="bg-white/80 backdrop-blur-sm px-4 rounded-full border border-gray-100 text-gray-400 font-medium text-xs py-0.5">
+                or continue with
               </span>
             </div>
           </div>
 
-          <button
+          <Button
             onClick={() => signIn()}
-            className="w-full h-14 bg-white text-zinc-900 border border-zinc-100 rounded-xl font-black text-sm uppercase flex items-center justify-center gap-3 hover:bg-zinc-50 transition-all shadow-sm cursor-pointer"
+            className="w-full h-12 bg-white/50 hover:bg-white/80 backdrop-blur-md text-gray-900 border border-white/80 rounded-full font-medium text-sm flex items-center justify-center gap-2.5 transition-all duration-150 shadow-sm"
           >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path
@@ -153,28 +150,25 @@ const LoginPage = () => {
                 fill="#EA4335"
               />
             </svg>
-            Continue with Google
-          </button>
-
-          <div className="mt-10 text-center">
-            <p className="text-zinc-400 text-sm font-bold uppercase">
-              New to Odyssey?{" "}
-              <Link
-                href="/register"
-                className="text-sky-900 font-black underline underline-offset-4 decoration-sky-900/20 hover:decoration-sky-900 transition-all"
-              >
-                Create Account
-              </Link>
-            </p>
-          </div>
+            <span>Google</span>
+          </Button>
         </div>
 
-        <div className="mt-12 text-center">
+        <div className="mt-8 text-center flex flex-col gap-3">
+          <p className="text-gray-500 text-sm font-medium">
+            New to Silentium?{" "}
+            <Link
+              href="/register"
+              className="text-indigo-500 font-medium hover:text-indigo-600 transition-colors"
+            >
+              Create Account
+            </Link>
+          </p>
           <Link
             href="/"
-            className="text-zinc-400 text-sm font-black uppercase hover:text-sky-900 transition-colors"
+            className="text-gray-500 text-sm font-medium hover:text-gray-900 transition-colors mt-2"
           >
-            ← Return to Hub
+            Return to Home
           </Link>
         </div>
       </div>
