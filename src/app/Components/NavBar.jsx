@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar, Button, Dropdown } from "@heroui/react";
 import {
   RiCloseLine,
@@ -10,15 +11,36 @@ import {
   RiUserAddLine,
   RiUserLine,
 } from "react-icons/ri";
+
 import { authClient } from "@/lib/auth-client";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const router = useRouter();
+  const pathname = usePathname();
+
   const { data: session } = authClient.useSession();
   const user = session?.user;
 
-  console.log(user);
+  const handleLogout = async () => {
+    await authClient.signOut();
+
+    router.push("/login");
+    router.refresh();
+  };
+
+  const navLinkClass = (path) =>
+    `font-sans text-sm font-medium no-underline transition-colors duration-150 ${
+      pathname === path
+        ? "text-indigo-500 !font-bold"
+        : "text-gray-500  hover:text-gray-900"
+    }`;
+
+  const mobileNavLinkClass = (path) =>
+    `block font-heading font-semibold text-xl no-underline ${
+      pathname === path ? "text-indigo-500 font-bold" : "text-gray-900"
+    }`;
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-stone-50 border-b border-stone-200">
@@ -31,49 +53,41 @@ const NavBar = () => {
           </Link>
 
           <div className="hidden md:flex items-center gap-6">
-            <Link
-              href="/"
-              className="font-sans text-sm font-medium text-indigo-500 no-underline transition-colors duration-150"
-            >
+            <Link href="/" className={navLinkClass("/")}>
               Home
             </Link>
 
-            <Link
-              href="/rooms"
-              className="font-sans text-sm font-medium text-gray-500 hover:text-gray-900 no-underline transition-colors duration-150"
-            >
+            <Link href="/rooms" className={navLinkClass("/rooms")}>
               Rooms
             </Link>
 
-            <Link
-              href="/add-room"
-              className="font-sans text-sm font-medium text-gray-500 hover:text-gray-900 no-underline transition-colors duration-150"
-            >
-              Add Room
-            </Link>
+            {user && (
+              <>
+                <Link href="/add-room" className={navLinkClass("/add-room")}>
+                  Add Room
+                </Link>
 
-            <Link
-              href="/my-listings"
-              className="font-sans text-sm font-medium text-gray-500 hover:text-gray-900 no-underline transition-colors duration-150"
-            >
-              My Listings
-            </Link>
+                <Link
+                  href="/my-listings"
+                  className={navLinkClass("/my-listings")}
+                >
+                  My Listings
+                </Link>
 
-            <Link
-              href="/my-bookings"
-              className="font-sans text-sm font-medium text-gray-500 hover:text-gray-900 no-underline transition-colors duration-150"
-            >
-              My Bookings
-            </Link>
+                <Link
+                  href="/my-bookings"
+                  className={navLinkClass("/my-bookings")}
+                >
+                  My Bookings
+                </Link>
+              </>
+            )}
           </div>
 
           <div className="hidden md:flex items-center gap-6">
             {!user ? (
               <div className="flex items-center gap-4">
-                <Link
-                  href="/login"
-                  className="font-sans text-sm font-medium text-gray-500 hover:text-gray-900 no-underline transition-colors duration-150"
-                >
+                <Link href="/login" className={navLinkClass("/login")}>
                   Sign In
                 </Link>
 
@@ -97,12 +111,11 @@ const NavBar = () => {
                         </p>
                       </div>
 
-                      <Avatar className="w-11 h-11 border-2 border-white shadow-md ring-1 ring-zinc-100 object-cover rounded-full">
-                        <Avatar.Image alt={user?.name} src={user?.image} />
-                        <Avatar.Fallback>
-                          {user?.name?.charAt(0)}
-                        </Avatar.Fallback>
-                      </Avatar>
+                      <Avatar
+                        className="w-11 h-11 border-2 border-white shadow-md ring-1 ring-zinc-100 rounded-full"
+                        src={user?.image || ""}
+                        name={user?.name || "U"}
+                      />
                     </div>
                   </Dropdown.Trigger>
 
@@ -119,7 +132,7 @@ const NavBar = () => {
 
                     <Dropdown.Menu className="p-0">
                       <Dropdown.Item
-                        id="profile"
+                        key="profile"
                         className="rounded-lg hover:bg-stone-50"
                       >
                         <Link
@@ -137,10 +150,13 @@ const NavBar = () => {
                       </Dropdown.Item>
 
                       <Dropdown.Item
-                        id="logout"
+                        key="logout"
                         className="rounded-lg mt-1 border-t border-stone-200 pt-2 hover:bg-stone-50"
                       >
-                        <div className="flex w-full items-center justify-between py-1 cursor-pointer">
+                        <div
+                          onClick={handleLogout}
+                          className="flex w-full items-center justify-between py-1 cursor-pointer"
+                        >
                           <span className="font-sans font-medium text-sm text-gray-900">
                             Sign Out
                           </span>
@@ -172,40 +188,38 @@ const NavBar = () => {
         {isOpen && (
           <div className="md:hidden bg-stone-50 border-t border-stone-200 py-8 space-y-6">
             <div className="space-y-4">
-              <Link
-                href="/"
-                className="block font-heading font-semibold text-xl text-indigo-500 no-underline"
-              >
+              <Link href="/" className={mobileNavLinkClass("/")}>
                 Home
               </Link>
 
-              <Link
-                href="/rooms"
-                className="block font-heading font-semibold text-xl text-gray-900 no-underline"
-              >
+              <Link href="/rooms" className={mobileNavLinkClass("/rooms")}>
                 Rooms
               </Link>
 
-              <Link
-                href="/add-room"
-                className="block font-heading font-semibold text-xl text-gray-900 no-underline"
-              >
-                Add Room
-              </Link>
+              {user && (
+                <>
+                  <Link
+                    href="/add-room"
+                    className={mobileNavLinkClass("/add-room")}
+                  >
+                    Add Room
+                  </Link>
 
-              <Link
-                href="/my-listings"
-                className="block font-heading font-semibold text-xl text-gray-900 no-underline"
-              >
-                My Listings
-              </Link>
+                  <Link
+                    href="/my-listings"
+                    className={mobileNavLinkClass("/my-listings")}
+                  >
+                    My Listings
+                  </Link>
 
-              <Link
-                href="/my-bookings"
-                className="block font-heading font-semibold text-xl text-gray-900 no-underline"
-              >
-                My Bookings
-              </Link>
+                  <Link
+                    href="/my-bookings"
+                    className={mobileNavLinkClass("/my-bookings")}
+                  >
+                    My Bookings
+                  </Link>
+                </>
+              )}
             </div>
 
             {!user ? (
@@ -231,12 +245,15 @@ const NavBar = () => {
               <div className="space-y-4 pt-4 border-t border-stone-200">
                 <Link
                   href="/my-profile"
-                  className="block font-heading font-semibold text-xl text-gray-900 no-underline"
+                  className={mobileNavLinkClass("/my-profile")}
                 >
                   Account
                 </Link>
 
-                <div className="block font-heading font-semibold text-xl text-gray-500 cursor-pointer">
+                <div
+                  onClick={handleLogout}
+                  className="block font-heading font-semibold text-xl text-gray-500 cursor-pointer"
+                >
                   Sign Out
                 </div>
               </div>
