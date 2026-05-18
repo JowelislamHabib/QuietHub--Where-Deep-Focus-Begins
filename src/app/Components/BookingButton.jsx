@@ -14,9 +14,12 @@ import {
   RiArrowDownSLine,
   RiCalendarCheckLine,
   RiCheckboxCircleLine,
+  RiLoginBoxLine,
   RiMapPinLine,
   RiUserLine,
 } from "react-icons/ri";
+import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
 
 const fieldLabelClass = "mb-1.5 block text-sm font-medium text-stone-700";
 const fieldClassName =
@@ -69,6 +72,9 @@ const BookingButton = ({ room }) => {
     }
   };
 
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -81,6 +87,7 @@ const BookingButton = ({ room }) => {
       endTime: `${endTime}:00`,
       note,
       totalCost: computedCost,
+      userId: user?.id,
     };
 
     console.log(reservationData);
@@ -118,7 +125,7 @@ const BookingButton = ({ room }) => {
                 <RiMapPinLine className="size-4" />
               </span>
               <div className="min-w-0">
-                <p className="text-[11px] font-medium uppercase tracking-wide text-stone-400">
+                <p className="text-base font-medium uppercase tracking-wide text-stone-400">
                   Floor
                 </p>
                 <p className="truncate text-sm font-semibold text-stone-800">
@@ -133,7 +140,7 @@ const BookingButton = ({ room }) => {
               <RiUserLine className="size-4" />
             </span>
             <div className="min-w-0">
-              <p className="text-[11px] font-medium uppercase tracking-wide text-stone-400">
+              <p className="text-base font-medium uppercase tracking-wide text-stone-400">
                 Capacity
               </p>
               <p className="text-sm font-semibold text-stone-800">
@@ -168,10 +175,20 @@ const BookingButton = ({ room }) => {
         )}
 
         <Modal>
-          <Button className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-indigo-600 text-sm font-semibold text-white shadow-md shadow-indigo-600/25 transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-600/30 active:scale-[0.98]">
-            <RiCalendarCheckLine className="size-5 transition-transform duration-200 group-hover:scale-110" />
-            Reserve Space
-          </Button>
+          {user ? (
+            <Button className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-indigo-600 text-sm font-semibold text-white shadow-md shadow-indigo-600/25 transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-600/30 active:scale-[0.98]">
+              <RiCalendarCheckLine className="size-5 transition-transform duration-200 group-hover:scale-110" />
+              Reserve Space
+            </Button>
+          ) : (
+            <Link
+              href="/login"
+              className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-indigo-600 text-sm font-semibold text-white shadow-md shadow-indigo-600/25 transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-600/30 active:scale-[0.98]"
+            >
+              <RiLoginBoxLine className="size-5 transition-transform duration-200 group-hover:scale-110" />
+              Login to Reserve
+            </Link>
+          )}
 
           <Modal.Backdrop className="bg-black/50 backdrop-blur-sm">
             <Modal.Container placement="center">

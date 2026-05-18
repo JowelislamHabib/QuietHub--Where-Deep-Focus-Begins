@@ -71,14 +71,14 @@ const RoomCard = ({ room }) => {
             {visibleAmenities.map((amenity) => (
               <span
                 key={amenity}
-                className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50 px-2 py-0.5 text-[11px] font-medium text-stone-600"
+                className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50 px-2 py-0.5 text-base font-medium text-stone-600"
               >
                 <RiCheckboxCircleLine className="size-3 text-indigo-500" />
                 {amenity}
               </span>
             ))}
             {extraAmenitiesCount > 0 && (
-              <span className="rounded-full border border-dashed border-stone-300 px-2 py-0.5 text-[11px] font-medium text-stone-500">
+              <span className="rounded-full border border-dashed border-stone-300 px-2 py-0.5 text-base font-medium text-stone-500">
                 +{extraAmenitiesCount}
               </span>
             )}
