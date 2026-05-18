@@ -1,6 +1,7 @@
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "./Components/NavBar";
+import Footer from "./Components/Footer";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
       <body className="light bg-stone-50 text-gray-900 antialiased selection:bg-indigo-50">
         <NavBar />
         {children}
+        <Footer />
       </body>
     </html>
   );

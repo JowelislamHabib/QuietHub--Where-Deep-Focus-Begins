@@ -112,7 +112,7 @@ const NavBar = () => {
                       </div>
 
                       <Avatar
-                        className="w-11 h-11 border-2 border-white shadow-md ring-1 ring-zinc-100 rounded-full"
+                        className="w-11 h-11  rounded-full z-10"
                         src={user?.image || ""}
                         name={user?.name || "U"}
                       />
