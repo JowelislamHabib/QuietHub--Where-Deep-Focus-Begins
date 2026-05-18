@@ -13,10 +13,10 @@ import {
 } from "react-icons/ri";
 
 const RoomCard = ({ room }) => {
-  const mockRoom = room;
+  const allRoom = room;
 
-  const visibleAmenities = mockRoom?.amenities?.slice(0, 3) || [];
-  const extraAmenitiesCount = (mockRoom?.amenities?.length || 0) - 3;
+  const visibleAmenities = allRoom?.amenities?.slice(0, 3) || [];
+  const extraAmenitiesCount = (allRoom?.amenities?.length || 0) - 3;
 
   return (
     <div className="h-full">
@@ -29,8 +29,8 @@ const RoomCard = ({ room }) => {
               className="w-full h-full relative"
             >
               <Image
-                src={mockRoom?.image}
-                alt={mockRoom?.name || "Focus Space"}
+                src={allRoom?.image}
+                alt={allRoom?.name || "Focus Space"}
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover"
@@ -41,18 +41,18 @@ const RoomCard = ({ room }) => {
           <div className="mt-5 space-y-4">
             <div className="space-y-1">
               <h2 className="text-xl font-bold text-gray-900">
-                {mockRoom?.name}
+                {allRoom?.name}
               </h2>
               <div className="flex items-center gap-2 text-gray-500 text-sm">
                 <span className="text-indigo-500">
                   <RiMapPinLine className="text-base" />
                 </span>
-                <span>{mockRoom?.floor}</span>
+                <span>{allRoom?.floor}</span>
               </div>
             </div>
 
             <p className="text-sm text-gray-500 line-clamp-2">
-              {mockRoom?.description}
+              {allRoom?.description}
             </p>
 
             <div className="flex items-center gap-4 py-2 border-y border-stone-200 text-sm text-gray-900">
@@ -60,17 +60,17 @@ const RoomCard = ({ room }) => {
                 <span className="text-indigo-500">
                   <RiUserLine className="text-base" />
                 </span>
-                <span>{mockRoom?.capacity} seats</span>
+                <span>{allRoom?.capacity} seats</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-indigo-500">
                   <RiMoneyDollarCircleLine className="text-base" />
                 </span>
-                <span>${mockRoom?.hourlyRate}/hr</span>
+                <span>${allRoom?.hourlyRate}/hr</span>
               </div>
             </div>
 
-            {mockRoom?.amenities && mockRoom?.amenities.length > 0 && (
+            {allRoom?.amenities && allRoom?.amenities.length > 0 && (
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {visibleAmenities.map((amenity, idx) => (
                   <span
@@ -91,7 +91,7 @@ const RoomCard = ({ room }) => {
         </div>
 
         <div className="pt-4">
-          <Link href={`/rooms/${mockRoom?._id}`} className="block w-full">
+          <Link href={`/rooms/${allRoom?._id}`} className="block w-full">
             <Button className="w-full h-12 bg-indigo-500 text-white rounded-full text-sm font-medium hover:bg-indigo-600 flex items-center justify-center gap-2">
               <span>View Details</span>
               <RiArrowRightLine className="text-base" />

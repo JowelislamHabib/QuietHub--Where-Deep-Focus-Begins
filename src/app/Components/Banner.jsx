@@ -98,10 +98,10 @@ const Banner = () => {
                 </Button>
               </Link>
 
-              <Link href="/list-your-space" className="w-full sm:w-auto">
+              <Link href="/add-room" className="w-full sm:w-auto">
                 <Button className="w-full h-12 border border-stone-200 bg-stone-100 text-gray-900 rounded-full text-base font-medium hover:bg-stone-200 transition-colors duration-150 flex items-center justify-center gap-2 shadow-sm">
                   <RiAddCircleLine className="text-lg" />
-                  <span>List Your Space</span>
+                  <span>List Your Room</span>
                 </Button>
               </Link>
             </div>
