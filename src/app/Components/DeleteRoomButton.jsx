@@ -1,16 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertDialog, Button, toast } from "@heroui/react";
 
 const DeleteRoomButton = ({ id }) => {
   const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async (close) => {
-    setIsDeleting(true);
-
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`,
@@ -24,12 +20,11 @@ const DeleteRoomButton = ({ id }) => {
       if (res.ok) {
         toast.success("Room deleted successfully");
         close();
-        router.refresh();
+        router.push("/rooms");
       } else {
         toast.error(data.message || "Failed to delete");
       }
     } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -44,9 +39,7 @@ const DeleteRoomButton = ({ id }) => {
                 <AlertDialog.CloseTrigger />
                 <AlertDialog.Header>
                   <AlertDialog.Icon status="danger" />
-                  <AlertDialog.Heading>
-                    Delete this room?
-                  </AlertDialog.Heading>
+                  <AlertDialog.Heading>Delete this room?</AlertDialog.Heading>
                 </AlertDialog.Header>
                 <AlertDialog.Body>
                   <p>
@@ -55,15 +48,15 @@ const DeleteRoomButton = ({ id }) => {
                   </p>
                 </AlertDialog.Body>
                 <AlertDialog.Footer>
-                  <Button slot="close" variant="tertiary" isDisabled={isDeleting}>
+                  <Button slot="close" variant="tertiary">
                     Cancel
                   </Button>
                   <Button
+                    slot="close"
                     variant="danger"
-                    isDisabled={isDeleting}
-                    onPress={() => handleDelete(renderProps.close)}
+                    onClick={() => handleDelete(renderProps.close)}
                   >
-                    {isDeleting ? "Deleting…" : "Delete"}
+                    Delete
                   </Button>
                 </AlertDialog.Footer>
               </>
