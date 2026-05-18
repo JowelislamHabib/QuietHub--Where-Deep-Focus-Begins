@@ -104,18 +104,25 @@ const NavBar = () => {
 
                 <Dropdown placement="bottom-end">
                   <Dropdown.Trigger className="outline-none">
-                    <div className="flex items-center gap-3 cursor-pointer">
-                      <div className="text-right hidden lg:block">
-                        <p className="font-sans font-medium text-sm text-gray-900 leading-none">
-                          {user?.name || user?.email || "User"}
-                        </p>
-                      </div>
+                    <div className="rounded-full border-2 pl-4">
+                      <div className="flex items-center gap-3 cursor-pointer">
+                        <div className="text-right hidden lg:block">
+                          <p className="font-sans font-medium text-sm text-gray-900 leading-none">
+                            {user?.name || user?.email || "User"}
+                          </p>
+                        </div>
 
-                      <Avatar
-                        className="w-11 h-11  rounded-full z-10"
-                        src={user?.image || ""}
-                        name={user?.name || "U"}
-                      />
+                        <Avatar className="w-11 h-11 border-2 border-white shadow-md ring-1 ring-zinc-100 object-cover rounded-full">
+                          <Avatar.Image
+                            referrerPolicy="no-referrer"
+                            alt={user?.name}
+                            src={user?.image}
+                          />
+                          <Avatar.Fallback>
+                            {user?.name?.charAt(0)}
+                          </Avatar.Fallback>
+                        </Avatar>
+                      </div>
                     </div>
                   </Dropdown.Trigger>
 
