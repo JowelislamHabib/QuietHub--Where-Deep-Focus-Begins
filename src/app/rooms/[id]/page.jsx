@@ -8,13 +8,13 @@ import {
   RiUserLine,
 } from "react-icons/ri";
 import BookingButton from "@/app/Components/BookingButton";
+import { Card } from "@heroui/react";
 
 const RoomDetails = async ({ params }) => {
   const { id } = await params;
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`,
-    { next: { revalidate: 60 } },
-  );
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`, {
+    next: { revalidate: 60 },
+  });
   const room = await res.json();
 
   const capacity = room?.capacity ?? 1;
@@ -22,7 +22,10 @@ const RoomDetails = async ({ params }) => {
   return (
     <section className="min-h-screen bg-stone-50">
       <div className="relative overflow-hidden border-b border-indigo-100/60 bg-gradient-to-br from-indigo-100/50 via-white to-violet-50">
-        <div aria-hidden className="pointer-events-none absolute -right-12 top-0 size-48 rounded-full bg-indigo-300/20 blur-3xl" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-12 top-0 size-48 rounded-full bg-indigo-300/20 blur-3xl"
+        />
         <div className="container relative mx-auto px-4 py-5">
           <Link
             href="/rooms"
@@ -109,7 +112,6 @@ const RoomDetails = async ({ params }) => {
               )}
             </div>
           </article>
-
           <div className="lg:pt-2">
             <BookingButton room={room} />
           </div>

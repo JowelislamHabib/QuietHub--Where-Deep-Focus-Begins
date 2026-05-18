@@ -9,6 +9,7 @@ import {
   Button,
   Modal,
   toast,
+  Avatar,
 } from "@heroui/react";
 import { CalendarDate } from "@internationalized/date";
 import {
@@ -203,6 +204,36 @@ const BookingButton = ({ room }) => {
                   +{extraAmenitiesCount} more
                 </span>
               )}
+            </div>
+          </div>
+        )}
+
+        {(room?.createdBy || room?.creatorEmail) && (
+          <div className="rounded-2xl border border-stone-200 bg-stone-50/80 p-4 ring-1 ring-stone-900/5">
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+              Listed by
+            </p>
+            <div className="flex items-center gap-3">
+              <Avatar className="size-11 shrink-0 border-2 border-white shadow-sm ring-1 ring-stone-200/80">
+                <Avatar.Image
+                  referrerPolicy="no-referrer"
+                  alt={room?.createdBy || "Host"}
+                  src={room?.creatorAvatar}
+                />
+                <Avatar.Fallback className="bg-indigo-100 text-sm font-semibold text-indigo-700">
+                  {room?.createdBy?.charAt(0) ?? "?"}
+                </Avatar.Fallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-stone-900">
+                  {room?.createdBy || "Space host"}
+                </p>
+                {room?.creatorEmail && (
+                  <p className="truncate text-xs text-stone-500">
+                    {room.creatorEmail}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         )}

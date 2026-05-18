@@ -21,6 +21,7 @@ import {
   RiStackLine,
   RiUserSharedLine,
 } from "react-icons/ri";
+import { authClient } from "@/lib/auth-client";
 
 const AddRoomPage = () => {
   const router = useRouter();
@@ -33,6 +34,9 @@ const AddRoomPage = () => {
     "Quiet Zone",
     "Air Conditioning",
   ];
+
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -52,6 +56,10 @@ const AddRoomPage = () => {
       bookingCount: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      creatorId: user?.id,
+      createdBy: user?.name,
+      creatorEmail: user?.email,
+      creatorAvatar: user?.image,
     };
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms`, {
