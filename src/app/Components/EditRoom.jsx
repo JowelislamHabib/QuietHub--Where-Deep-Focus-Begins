@@ -12,6 +12,7 @@ import {
   toast,
 } from "@heroui/react";
 import { RiPencilLine } from "react-icons/ri";
+import { authClient } from "@/lib/auth-client";
 
 const amenityOptions = [
   "Whiteboard",
@@ -60,18 +61,22 @@ const EditRoom = ({ room }) => {
       updatedAt: new Date().toISOString(),
     };
 
+    const { data: tokenData } = await authClient.token();
+
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${_id}`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenData?.token}`,
         },
         body: JSON.stringify(updatedRoom),
       },
     );
 
     const data = await res.json();
+    console.log("Update response:", data);
 
     if (res.ok) {
       toast.success("Room updated");

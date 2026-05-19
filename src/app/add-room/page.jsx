@@ -97,15 +97,19 @@ const AddRoomPage = () => {
       creatorAvatar: user?.image,
     };
 
+    const { data: tokenData } = await authClient.token();
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${tokenData?.token}`,
       },
       body: JSON.stringify(roomDetails),
     });
 
     const data = await res.json();
+    console.log("data", data, "token", tokenData?.accessToken);
 
     if (res.ok) {
       const newId = data.insertedId || data.id;
