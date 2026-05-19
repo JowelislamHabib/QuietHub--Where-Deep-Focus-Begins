@@ -18,6 +18,7 @@ import {
   RiCheckboxCircleLine,
   RiLoginBoxLine,
   RiMapPinLine,
+  RiSparklingLine,
   RiUserLine,
 } from "react-icons/ri";
 import { authClient } from "@/lib/auth-client";
@@ -141,11 +142,43 @@ const BookingButton = ({ room }) => {
           <span className="text-sm font-medium text-stone-500">/ hour</span>
         </div>
         {room?.bookingCount != null && (
-          <p className="mt-2 text-xs text-stone-500">
-            {room.bookingCount === 0
-              ? "No bookings yet — grab the first slot"
-              : `This room has ${room.bookingCount} booking${room.bookingCount === 1 ? "" : "s"} so far.`}
-          </p>
+          <div
+            className={`mt-3 flex items-center gap-2.5 rounded-xl px-3 py-2.5 ring-1 ${
+              room.bookingCount === 0
+                ? "bg-emerald-50/90 ring-emerald-200/80"
+                : "bg-white/90 ring-indigo-200/70 shadow-sm"
+            }`}
+          >
+            <span
+              className={`flex size-9 shrink-0 items-center justify-center rounded-full shadow-sm ring-1 ${
+                room.bookingCount === 0
+                  ? "bg-white text-emerald-600 ring-emerald-200/80"
+                  : "bg-indigo-50 text-indigo-600 ring-indigo-100"
+              }`}
+            >
+              {room.bookingCount === 0 ? (
+                <RiSparklingLine className="size-4" aria-hidden />
+              ) : (
+                <RiCalendarCheckLine className="size-4" aria-hidden />
+              )}
+            </span>
+            <div className="min-w-0">
+              <p
+                className={`text-[10px] font-semibold uppercase tracking-wide ${
+                  room.bookingCount === 0
+                    ? "text-emerald-700"
+                    : "text-indigo-600"
+                }`}
+              >
+                {room.bookingCount === 0 ? "First slot open" : "Popularity"}
+              </p>
+              <p className="text-sm font-semibold leading-snug text-stone-800">
+                {room.bookingCount === 0
+                  ? "Be the first to book this space"
+                  : `${room.bookingCount} reservation${room.bookingCount === 1 ? "" : "s"} so far`}
+              </p>
+            </div>
+          </div>
         )}
       </div>
 
