@@ -55,6 +55,9 @@ const MyBookingsPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+  const { token } = await auth.api.getToken({
+    headers: await headers(),
+  });
 
   const userId = session?.user?.id;
 
@@ -62,6 +65,9 @@ const MyBookingsPage = async () => {
     `${process.env.NEXT_PUBLIC_SERVER_URL}/my-bookings/${userId}`,
     {
       cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
   );
 
@@ -143,7 +149,7 @@ const MyBookingsPage = async () => {
             </div>
           </div>
         ) : (
-          <ul className="grid gap-4">
+          <ul className="grid gap-8">
             {bookingList.map((booking) => {
               const room = booking.room ?? {};
               const roomImage =

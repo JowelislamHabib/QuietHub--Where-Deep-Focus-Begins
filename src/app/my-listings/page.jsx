@@ -35,10 +35,17 @@ const MyListingsPage = async () => {
 
   const userId = session?.user?.id;
 
+  const { token } = await auth.api.getToken({
+    headers: await headers(),
+  });
+
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/my-listings/${userId}`,
     {
       cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
   );
 
@@ -51,7 +58,7 @@ const MyListingsPage = async () => {
 
   return (
     <section className="min-h-screen bg-stone-50">
-      <div className="relative overflow-hidden border-b border-indigo-100/60 bg-gradient-to-br from-indigo-100/50 via-white to-violet-50">
+      <div className="relative overflow-hidden border-b border-indigo-100/60 bg-linear-to-br from-indigo-100/50 via-white to-violet-50">
         <div
           aria-hidden
           className="pointer-events-none absolute -right-16 top-0 size-72 rounded-full bg-indigo-300/25 blur-3xl"
@@ -120,7 +127,7 @@ const MyListingsPage = async () => {
             </div>
           </div>
         ) : (
-          <ul className="grid gap-4">
+          <ul className="grid gap-8">
             {roomList.map((room) => {
               const roomImage =
                 room.image ||
@@ -194,7 +201,9 @@ const MyListingsPage = async () => {
                             </dt>
                             <dd className="font-medium text-stone-800">
                               {bookingCount}{" "}
-                              {bookingCount === 1 ? "reservation" : "reservations"}
+                              {bookingCount === 1
+                                ? "reservation"
+                                : "reservations"}
                             </dd>
                           </div>
                         </div>
