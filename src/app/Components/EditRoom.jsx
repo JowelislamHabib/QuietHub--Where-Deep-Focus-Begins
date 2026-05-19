@@ -77,7 +77,7 @@ const EditRoom = ({ room }) => {
       toast.success("Room updated");
       router.refresh();
     } else {
-      toast.error(data.message || "Update failed");
+      toast.danger(data.message || "Update failed");
     }
   };
 
@@ -166,10 +166,7 @@ const EditRoom = ({ room }) => {
                     className={fieldGroupClassName}
                   >
                     <Label className={labelClassName}>Floor</Label>
-                    <Input
-                      placeholder="3rd Floor"
-                      className={inputClassName}
-                    />
+                    <Input placeholder="3rd Floor" className={inputClassName} />
                     <FieldError className="text-sm font-medium text-rose-500" />
                   </TextField>
 

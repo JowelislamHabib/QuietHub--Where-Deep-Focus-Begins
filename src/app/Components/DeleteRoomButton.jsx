@@ -23,7 +23,7 @@ const DeleteRoomButton = ({ id }) => {
         close();
         router.push("/rooms");
       } else {
-        toast.error(data.message || "Failed to delete");
+        toast.danger(data.message || "Failed to delete");
       }
     } finally {
     }

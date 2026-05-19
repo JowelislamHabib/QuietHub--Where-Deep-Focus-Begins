@@ -21,6 +21,7 @@ import {
   RiUserLine,
 } from "react-icons/ri";
 import { authClient } from "@/lib/auth-client";
+import { buildHoursOptions } from "@/lib/booking-time";
 import Link from "next/link";
 
 const fieldLabelClass = "mb-1.5 block text-sm font-medium text-stone-700";
@@ -50,10 +51,7 @@ const BookingButton = ({ room }) => {
   const [note, setNote] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const hoursOptions = Array.from({ length: 24 }, (_, hour) => {
-    const value = hour.toString().padStart(2, "0");
-    return { value, label: `${value}:00` };
-  });
+  const hoursOptions = buildHoursOptions();
 
   const calculateTotalCost = () => {
     const duration = Number(endTime) - Number(startTime);
@@ -80,12 +78,12 @@ const BookingButton = ({ room }) => {
 
   const handleReservation = async () => {
     if (Number(startTime) >= Number(endTime)) {
-      toast.error("End time must be after start time");
+      toast.danger("End time must be after start time");
       return;
     }
 
     if (!user) {
-      toast.error("Please sign in to book a room");
+      toast.danger("Please sign in to book a room");
       return;
     }
 

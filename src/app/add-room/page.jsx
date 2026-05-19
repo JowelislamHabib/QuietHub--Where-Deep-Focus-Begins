@@ -118,7 +118,7 @@ const AddRoomPage = () => {
         description: "Your quiet focus session reservation listing is active.",
       });
     } else {
-      toast.error("Failed to create room instance");
+      toast.danger("Failed to create room instance");
     }
   };
 
