@@ -17,12 +17,46 @@ export const parseBookingHour = (time) => {
   return hours.padStart(2, "0");
 };
 
-export const formatDisplayTime = (time) => formatHourLabel(parseBookingHour(time));
+export const formatDisplayTime = (time) =>
+  formatHourLabel(parseBookingHour(time));
 
-/** Parse `YYYY-MM-DD` (or ISO prefix) into CalendarDate parts. */
 export const parseBookingDate = (date) => {
   if (!date) return null;
   const [year, month, day] = String(date).split("T")[0].split("-").map(Number);
   if (!year || !month || !day) return null;
   return { year, month, day };
+};
+
+export const isSelectedDateToday = (dateStr) => {
+  const parts = parseBookingDate(dateStr);
+  if (!parts) return false;
+  const now = new Date();
+  return (
+    parts.year === now.getFullYear() &&
+    parts.month === now.getMonth() + 1 &&
+    parts.day === now.getDate()
+  );
+};
+
+export const getMinBookableHour = () => new Date().getHours();
+
+export const isStartHourDisabled = (hourValue, dateStr) => {
+  if (!isSelectedDateToday(dateStr)) return false;
+  return Number(hourValue) < getMinBookableHour();
+};
+
+export const isEndHourDisabled = (hourValue, dateStr, startHour) => {
+  if (Number(hourValue) <= Number(startHour)) return true;
+  if (!isSelectedDateToday(dateStr)) return false;
+  return Number(hourValue) <= getMinBookableHour();
+};
+
+export const getDefaultStartHour = (dateStr) => {
+  const minHour = isSelectedDateToday(dateStr) ? getMinBookableHour() : 9;
+  return Math.min(minHour, 22).toString().padStart(2, "0");
+};
+
+export const getDefaultEndHour = (startHour) => {
+  const next = (Number(startHour) + 1).toString().padStart(2, "0");
+  return next === "24" ? "23" : next;
 };

@@ -17,7 +17,10 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Silentium — Where Deep Focus Begins",
+  title: {
+    default: "Silentium – Where Deep Focus Begins",
+    template: "%s – Silentium",
+  },
   description:
     "Calm · Minimal · Intentional spaces, sessions, and reservations.",
 };

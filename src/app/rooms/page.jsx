@@ -6,6 +6,10 @@ import {
 } from "react-icons/ri";
 import RoomCard from "../Components/RoomCard";
 
+export const metadata = {
+  title: "Available Rooms",
+};
+
 const RoomsPage = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms`, {});
   const rooms = await res.json();

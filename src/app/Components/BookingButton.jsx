@@ -11,7 +11,7 @@ import {
   toast,
   Avatar,
 } from "@heroui/react";
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 import {
   RiArrowDownSLine,
   RiCalendarCheckLine,
@@ -22,7 +22,13 @@ import {
   RiUserLine,
 } from "react-icons/ri";
 import { authClient } from "@/lib/auth-client";
-import { buildHoursOptions } from "@/lib/booking-time";
+import {
+  buildHoursOptions,
+  getDefaultEndHour,
+  getDefaultStartHour,
+  isEndHourDisabled,
+  isStartHourDisabled,
+} from "@/lib/booking-time";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -42,20 +48,41 @@ const BookingButton = ({ room }) => {
 
   const router = useRouter();
 
-  const [selectedDate, setSelectedDate] = useState(
-    new CalendarDate(
-      new Date().getFullYear(),
-      new Date().getMonth() + 1,
-      new Date().getDate(),
-    ),
-  );
+  const minSelectableDate = today(getLocalTimeZone());
 
-  const [startTime, setStartTime] = useState("09");
-  const [endTime, setEndTime] = useState("10");
+  const [selectedDate, setSelectedDate] = useState(minSelectableDate);
+
+  const [startTime, setStartTime] = useState(() =>
+    getDefaultStartHour(minSelectableDate.toString()),
+  );
+  const [endTime, setEndTime] = useState(() =>
+    getDefaultEndHour(getDefaultStartHour(minSelectableDate.toString())),
+  );
   const [note, setNote] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const hoursOptions = buildHoursOptions();
+  const selectedDateStr = selectedDate?.toString() ?? "";
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    const dateStr = date?.toString() ?? "";
+    const nextStart = isStartHourDisabled(startTime, dateStr)
+      ? getDefaultStartHour(dateStr)
+      : startTime;
+
+    if (nextStart !== startTime) {
+      setStartTime(nextStart);
+    }
+
+    const nextEnd = isEndHourDisabled(endTime, dateStr, nextStart)
+      ? getDefaultEndHour(nextStart)
+      : endTime;
+
+    if (nextEnd !== endTime) {
+      setEndTime(nextEnd);
+    }
+  };
 
   const calculateTotalCost = () => {
     const duration = Number(endTime) - Number(startTime);
@@ -86,6 +113,11 @@ const BookingButton = ({ room }) => {
       return;
     }
 
+    if (isStartHourDisabled(startTime, selectedDateStr)) {
+      toast.danger("Start time must be in the future");
+      return;
+    }
+
     if (!user) {
       toast.danger("Please sign in to book a room");
       return;
@@ -105,6 +137,8 @@ const BookingButton = ({ room }) => {
       userId: user?.id,
       userEmail: user?.email,
       userName: user?.name,
+      status: "confirmed",
+      cancelledAt: null,
     };
     console.log(reservationData);
 
@@ -325,7 +359,8 @@ const BookingButton = ({ room }) => {
                       className="w-full"
                       name="date"
                       value={selectedDate}
-                      onChange={setSelectedDate}
+                      onChange={handleDateChange}
+                      minValue={minSelectableDate}
                     >
                       <Label className={fieldLabelClass}>Date</Label>
 
@@ -350,7 +385,10 @@ const BookingButton = ({ room }) => {
                       </DateField.Group>
 
                       <DatePicker.Popover className="rounded-xl border border-stone-200 bg-white p-3 shadow-xl">
-                        <Calendar aria-label="Reservation Date">
+                        <Calendar
+                          aria-label="Reservation Date"
+                          minValue={minSelectableDate}
+                        >
                           <Calendar.Header className="mb-3 flex items-center justify-between">
                             <Calendar.YearPickerTrigger className="flex items-center gap-1 text-sm font-semibold text-stone-800">
                               <Calendar.YearPickerTriggerHeading />
@@ -405,7 +443,14 @@ const BookingButton = ({ room }) => {
                             className={timeSelectClassName}
                           >
                             {hoursOptions.slice(0, -1).map((option) => (
-                              <option key={option.value} value={option.value}>
+                              <option
+                                key={option.value}
+                                value={option.value}
+                                disabled={isStartHourDisabled(
+                                  option.value,
+                                  selectedDateStr,
+                                )}
+                              >
                                 {option.label}
                               </option>
                             ))}
@@ -433,9 +478,11 @@ const BookingButton = ({ room }) => {
                               <option
                                 key={option.value}
                                 value={option.value}
-                                disabled={
-                                  Number(option.value) <= Number(startTime)
-                                }
+                                disabled={isEndHourDisabled(
+                                  option.value,
+                                  selectedDateStr,
+                                  startTime,
+                                )}
                               >
                                 {option.label}
                               </option>

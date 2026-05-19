@@ -13,6 +13,10 @@ import { headers } from "next/headers";
 import DeleteRoomButton from "../Components/DeleteRoomButton";
 import EditRoom from "../Components/EditRoom";
 
+export const metadata = {
+  title: "My Listings",
+};
+
 const formatDisplayDate = (date) => {
   if (!date) return "";
   const parsed = new Date(date);

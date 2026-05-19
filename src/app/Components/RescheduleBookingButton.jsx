@@ -10,11 +10,15 @@ import {
   Modal,
   toast,
 } from "@heroui/react";
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 import { useRouter } from "next/navigation";
 import { RiArrowDownSLine, RiCalendarEventLine } from "react-icons/ri";
 import {
   buildHoursOptions,
+  getDefaultEndHour,
+  getDefaultStartHour,
+  isEndHourDisabled,
+  isStartHourDisabled,
   parseBookingDate,
   parseBookingHour,
 } from "@/lib/booking-time";
@@ -46,15 +50,53 @@ const RescheduleBookingButton = ({ booking }) => {
   const [selectedDate, setSelectedDate] = useState(() =>
     toCalendarDate(booking.date),
   );
-  const [startTime, setStartTime] = useState(
-    parseBookingHour(booking.startTime),
-  );
-  const [endTime, setEndTime] = useState(parseBookingHour(booking.endTime));
+  const [startTime, setStartTime] = useState(() => {
+    const dateStr = toCalendarDate(booking.date).toString();
+    const initial = parseBookingHour(booking.startTime);
+    return isStartHourDisabled(initial, dateStr)
+      ? getDefaultStartHour(dateStr)
+      : initial;
+  });
+  const [endTime, setEndTime] = useState(() => {
+    const dateStr = toCalendarDate(booking.date).toString();
+    const initialStart = parseBookingHour(booking.startTime);
+    const start = isStartHourDisabled(initialStart, dateStr)
+      ? getDefaultStartHour(dateStr)
+      : initialStart;
+    const initialEnd = parseBookingHour(booking.endTime);
+    return isEndHourDisabled(initialEnd, dateStr, start)
+      ? getDefaultEndHour(start)
+      : initialEnd;
+  });
   const [loading, setLoading] = useState(false);
 
+  const minSelectableDate = today(getLocalTimeZone());
   const hoursOptions = buildHoursOptions();
+  const selectedDateStr = selectedDate?.toString() ?? "";
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    const dateStr = date?.toString() ?? "";
+    const nextStart = isStartHourDisabled(startTime, dateStr)
+      ? getDefaultStartHour(dateStr)
+      : startTime;
+
+    if (nextStart !== startTime) {
+      setStartTime(nextStart);
+    }
+
+    const nextEnd = isEndHourDisabled(endTime, dateStr, nextStart)
+      ? getDefaultEndHour(nextStart)
+      : endTime;
+
+    if (nextEnd !== endTime) {
+      setEndTime(nextEnd);
+    }
+  };
 
   const handleStartTimeChange = (newStart) => {
+    if (isStartHourDisabled(newStart, selectedDateStr)) return;
+
     setStartTime(newStart);
 
     if (Number(newStart) >= Number(endTime)) {
@@ -68,6 +110,11 @@ const RescheduleBookingButton = ({ booking }) => {
 
     if (Number(startTime) >= Number(endTime)) {
       toast.danger("End time must be after start time");
+      return;
+    }
+
+    if (isStartHourDisabled(startTime, selectedDateStr)) {
+      toast.danger("Start time must be in the future");
       return;
     }
 
@@ -90,6 +137,8 @@ const RescheduleBookingButton = ({ booking }) => {
             startTime: `${startTime}:00`,
             endTime: `${endTime}:00`,
             totalCost,
+            status: "confirmed",
+            cancelledAt: null,
           }),
         },
       );
@@ -143,7 +192,8 @@ const RescheduleBookingButton = ({ booking }) => {
                   className="w-full"
                   name="date"
                   value={selectedDate}
-                  onChange={setSelectedDate}
+                  onChange={handleDateChange}
+                  minValue={minSelectableDate}
                 >
                   <Label className={fieldLabelClass}>Date</Label>
 
@@ -168,7 +218,10 @@ const RescheduleBookingButton = ({ booking }) => {
                   </DateField.Group>
 
                   <DatePicker.Popover className="rounded-xl border border-stone-200 bg-white p-3 shadow-xl">
-                    <Calendar aria-label="Reschedule date">
+                    <Calendar
+                      aria-label="Reschedule date"
+                      minValue={minSelectableDate}
+                    >
                       <Calendar.Header className="mb-3 flex items-center justify-between">
                         <Calendar.YearPickerTrigger className="flex items-center gap-1 text-sm font-semibold text-stone-800">
                           <Calendar.YearPickerTriggerHeading />
@@ -224,7 +277,14 @@ const RescheduleBookingButton = ({ booking }) => {
                         className={timeSelectClassName}
                       >
                         {hoursOptions.slice(0, -1).map((option) => (
-                          <option key={option.value} value={option.value}>
+                          <option
+                            key={option.value}
+                            value={option.value}
+                            disabled={isStartHourDisabled(
+                              option.value,
+                              selectedDateStr,
+                            )}
+                          >
                             {option.label}
                           </option>
                         ))}
@@ -252,9 +312,11 @@ const RescheduleBookingButton = ({ booking }) => {
                           <option
                             key={option.value}
                             value={option.value}
-                            disabled={
-                              Number(option.value) <= Number(startTime)
-                            }
+                            disabled={isEndHourDisabled(
+                              option.value,
+                              selectedDateStr,
+                              startTime,
+                            )}
                           >
                             {option.label}
                           </option>

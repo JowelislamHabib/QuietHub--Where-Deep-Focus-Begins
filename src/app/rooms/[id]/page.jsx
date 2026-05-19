@@ -12,19 +12,38 @@ import DeleteRoomButton from "@/app/Components/DeleteRoomButton";
 import EditRoom from "@/app/Components/EditRoom";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 
-const RoomDetails = async ({ params }) => {
+export async function generateMetadata({ params }) {
   const { id } = await params;
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`,
-    {},
+    { cache: "no-store" },
   );
+
+  if (!res.ok) {
+    return { title: "Room Not Found" };
+  }
+
+  const room = await res.json();
+  return { title: room?.name ?? "Room Details" };
+}
+
+const RoomDetails = async ({ params }) => {
+  const { id } = await params;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`, {
+    cache: "no-store",
+  });
   const room = await res.json();
 
-  const capacity = room?.capacity ?? 1;
+  if (!res.ok || !room?._id) {
+    notFound();
+  }
+
+  const capacity = room.capacity ?? 1;
 
   const session = await auth.api.getSession({
-    headers: await headers(), // you need to pass the headers object.
+    headers: await headers(),
   });
   const user = session?.user;
   const isOwner = user?.id === room?.creatorId;

@@ -14,6 +14,10 @@ import RescheduleBookingButton from "../Components/RescheduleBookingButton";
 import CancelBookingButton from "../Components/CancelBookingButton";
 import { formatDisplayTime, parseBookingDate } from "@/lib/booking-time";
 
+export const metadata = {
+  title: "My Bookings",
+};
+
 const normalizeBookingStatus = (status) => {
   const value = String(status || "confirmed").toLowerCase();
   if (value === "cancelled" || value === "canceled") return "cancelled";
@@ -31,8 +35,7 @@ const isBookingOnOrAfterToday = (date) => {
 };
 
 const statusBadgeStyles = {
-  confirmed:
-    "bg-emerald-50 text-emerald-700 ring-emerald-200/80",
+  confirmed: "bg-emerald-50 text-emerald-700 ring-emerald-200/80",
   cancelled: "bg-rose-50 text-rose-700 ring-rose-200/80",
 };
 
