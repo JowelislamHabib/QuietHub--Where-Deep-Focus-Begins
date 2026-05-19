@@ -3,16 +3,21 @@
 import { useRouter } from "next/navigation";
 import { AlertDialog, Button, toast } from "@heroui/react";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { authClient } from "@/lib/auth-client";
 
 const DeleteRoomButton = ({ id }) => {
   const router = useRouter();
 
   const handleDelete = async (close) => {
     try {
+      const { data: tokenData } = await authClient.token();
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${tokenData?.token}`,
+          },
         },
       );
 
