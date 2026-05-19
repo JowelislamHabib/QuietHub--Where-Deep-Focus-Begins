@@ -3,7 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button, FieldError, Form, Input, TextField } from "@heroui/react";
+import {
+  Button,
+  FieldError,
+  Form,
+  Input,
+  TextField,
+  toast,
+} from "@heroui/react";
 import {
   RiArrowRightLine,
   RiLockPasswordLine,
@@ -29,6 +36,7 @@ const LoginPage = () => {
     if (!error) {
       router.push("/");
     }
+    toast.danger(error.message);
   };
 
   const signIn = async () => {

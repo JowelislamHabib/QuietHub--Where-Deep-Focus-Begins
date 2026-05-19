@@ -10,6 +10,7 @@ import {
   Input,
   InputGroup,
   TextField,
+  toast,
 } from "@heroui/react";
 import {
   RiArrowRightLine,
@@ -24,29 +25,40 @@ import { authClient } from "@/lib/auth-client";
 
 const RegisterPage = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
+    const name = String(formData.get("name") ?? "").trim();
+    const email = String(formData.get("email") ?? "").trim();
+    const password = String(formData.get("password") ?? "");
+    const photo = String(formData.get("photo") ?? "").trim();
 
-    const { name, email, password, photo } = Object.fromEntries(
-      formData.entries(),
-    );
+    setIsSubmitting(true);
 
-    const { data, error } = await authClient.signUp.email({
-      name: name.trim(),
-      email: email.trim(),
-      password: password.trim(),
-      image: photo.trim(),
-    });
+    try {
+      const { error } = await authClient.signUp.email({
+        name,
+        email,
+        password,
+        ...(photo ? { image: photo } : {}),
+      });
 
-    console.log("data", data);
+      if (error) {
+        toast.danger(error.message ?? "Registration failed. Please try again.");
+        return;
+      }
 
-    if (!error) {
+      toast.success("Account created. Please sign in.");
       await authClient.signOut();
       router.push("/login");
+    } catch {
+      toast.danger("Registration failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -72,7 +84,11 @@ const RegisterPage = () => {
             </p>
           </div>
 
-          <Form className="space-y-5" onSubmit={onSubmit}>
+          <Form
+            className="space-y-5"
+            onSubmit={onSubmit}
+            validationBehavior="native"
+          >
             <TextField isRequired name="name" className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold text-gray-900 ml-3">
                 Full Name
@@ -88,11 +104,7 @@ const RegisterPage = () => {
               <FieldError className="text-red-500 text-xs font-medium mt-1 ml-3" />
             </TextField>
 
-            <TextField
-              isRequired
-              name="photo"
-              className="flex flex-col gap-1.5"
-            >
+            <TextField name="photo" className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold text-gray-900 ml-3">
                 Avatar URL
               </span>
@@ -129,7 +141,21 @@ const RegisterPage = () => {
 
             <TextField
               isRequired
+              minLength={8}
               name="password"
+              validate={(value) => {
+                if (value.length < 8) {
+                  return "Password must be at least 8 characters";
+                }
+                if (!/[A-Z]/.test(value)) {
+                  return "Password must contain at least one uppercase letter";
+                }
+                if (!/[a-z]/.test(value)) {
+                  return "Password must contain at least one lowercase letter";
+                }
+
+                return null;
+              }}
               className="flex flex-col gap-1.5"
             >
               <span className="text-xs font-semibold text-gray-900 ml-3">
@@ -166,9 +192,12 @@ const RegisterPage = () => {
 
             <Button
               type="submit"
+              isDisabled={isSubmitting}
               className="w-full h-12 bg-indigo-500 text-white rounded-full font-medium text-sm flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all duration-150 shadow-md shadow-indigo-500/10 mt-2"
             >
-              <span>Get Started</span>
+              <span>
+                {isSubmitting ? "Creating account..." : "Get Started"}
+              </span>
               <RiArrowRightLine className="text-lg" />
             </Button>
           </Form>

@@ -34,6 +34,9 @@ const listingTips = [
   "Pick amenities guests actually get; keeps reviews honest.",
 ];
 
+/** Core inputs before amenities: name, description, image, floor, capacity, hourly rate */
+const LISTING_FIELD_COUNT = 6;
+
 const cardClassName =
   "overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm";
 
@@ -139,36 +142,44 @@ const AddRoomPage = () => {
   const previewTitle = previewName.trim() || "Your room name";
 
   return (
-    <section className="min-h-screen bg-stone-50">
-      <div className="border-b border-stone-200 bg-indigo-50">
-        <div className="container mx-auto px-4 py-12 lg:py-16">
+    <section className="min-h-screen bg-linear-to-tl from-indigo-100/50 via-white to-violet-50">
+      <div className="relative overflow-hidden border-b border-indigo-100/60 bg-linear-to-br from-indigo-100/50 via-white to-violet-50">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-16 top-0 size-72 rounded-full bg-indigo-300/25 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-20 left-1/3 size-56 rounded-full bg-violet-200/30 blur-3xl"
+        />
+        <div className="container relative mx-auto px-4 py-12 lg:py-16">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-4">
-              <p className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase text-indigo-500 ring-1 ring-stone-200">
-                <RiSparklingLine className="text-base text-indigo-500" />
+            <div className="max-w-2xl space-y-4">
+              <p className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700 ring-1 ring-indigo-100">
+                <RiSparklingLine className="size-3.5" />
                 Host a space
               </p>
-              <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+              <h1 className="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl lg:text-5xl">
                 List a Focus Space
               </h1>
-              <p className="text-base text-gray-500 sm:text-lg">
+              <p className="text-base leading-relaxed text-stone-600 sm:text-lg">
                 Share a quiet room with others. Edit or remove your listing
                 anytime.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-4 lg:shrink-0">
-              <div className="rounded-lg border border-stone-200 bg-white px-6 py-4 shadow-sm">
-                <p className="text-2xl font-bold text-gray-900">
-                  {amenityOptions.length}
+            <div className="flex flex-wrap gap-3 lg:shrink-0">
+              <div className="rounded-xl border border-white/80 bg-white/80 px-6 py-4 shadow-sm ring-1 ring-indigo-100/80 backdrop-blur-sm">
+                <p className="text-2xl font-bold text-stone-900">
+                  {LISTING_FIELD_COUNT}
                 </p>
-                <p className="text-xs font-medium uppercase text-gray-500">
-                  Amenities
+                <p className="text-xs font-medium uppercase tracking-wide text-stone-500">
+                  Fields to complete
                 </p>
               </div>
-              <div className="rounded-lg border border-stone-200 bg-white px-6 py-4 shadow-sm">
-                <p className="text-2xl font-bold text-indigo-500">2 min</p>
-                <p className="text-xs font-medium uppercase text-gray-500">
+              <div className="rounded-xl border border-white/80 bg-white/80 px-6 py-4 shadow-sm ring-1 ring-indigo-100/80 backdrop-blur-sm">
+                <p className="text-2xl font-bold text-indigo-600">2 min</p>
+                <p className="text-xs font-medium uppercase tracking-wide text-stone-500">
                   Avg. setup
                 </p>
               </div>
