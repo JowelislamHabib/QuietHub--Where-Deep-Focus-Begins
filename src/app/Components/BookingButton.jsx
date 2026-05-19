@@ -24,6 +24,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { buildHoursOptions } from "@/lib/booking-time";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const fieldLabelClass = "mb-1.5 block text-sm font-medium text-stone-700";
 const fieldClassName =
@@ -38,6 +39,8 @@ const BookingButton = ({ room }) => {
   const amenities = room?.amenities ?? [];
   const visibleAmenities = amenities.slice(0, 3);
   const extraAmenitiesCount = amenities.length - visibleAmenities.length;
+
+  const router = useRouter();
 
   const [selectedDate, setSelectedDate] = useState(
     new CalendarDate(
@@ -118,8 +121,16 @@ const BookingButton = ({ room }) => {
     const data = await res.json();
 
     if (res.ok) {
-      toast.success("Booking Confirmed", {
-        description: `Your booking for ${roomName} has been confirmed.`,
+      toast.success("Reservation created", {
+        actionProps: {
+          children: "View Reservations",
+          onPress: () => {
+            router.push(`/my-bookings`);
+          },
+          className:
+            "bg-indigo-500 text-white font-medium rounded-full text-sm normal-case px-4 py-1 hover:bg-indigo-600",
+        },
+        description: "Your quiet focus session reservation is active.",
       });
     } else {
       toast.danger(data.message || "Failed to create reservation");
