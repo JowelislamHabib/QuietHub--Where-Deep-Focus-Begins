@@ -20,8 +20,8 @@ const RoomsPage = async () => {
   const maxRate = rates.length ? Math.max(...rates) : 0;
 
   return (
-    <section className="min-h-screen bg-stone-50">
-      <div className="relative overflow-hidden border-b border-indigo-100/60 bg-gradient-to-br from-indigo-100/50 via-white to-violet-50">
+    <section className="min-h-screen bg-linear-to-tl from-indigo-100/50 via-white to-violet-50">
+      <div className="relative overflow-hidden border-b border-indigo-100/60 bg-linear-to-br from-indigo-100/50 via-white to-violet-50">
         <div
           aria-hidden
           className="pointer-events-none absolute -right-16 top-0 size-72 rounded-full bg-indigo-300/25 blur-3xl"

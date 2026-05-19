@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
       className={`${inter.variable} ${poppins.variable}`}
       suppressHydrationWarning
     >
-      <body className="light bg-stone-50 text-gray-900 antialiased selection:bg-indigo-50">
+      <body className="light bg-linear-to-br from-indigo-100/50 via-white to-violet-50 text-gray-900 antialiased selection:bg-indigo-200">
         <NavBar />
         {children}
         <Footer />
