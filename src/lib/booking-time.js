@@ -18,3 +18,11 @@ export const parseBookingHour = (time) => {
 };
 
 export const formatDisplayTime = (time) => formatHourLabel(parseBookingHour(time));
+
+/** Parse `YYYY-MM-DD` (or ISO prefix) into CalendarDate parts. */
+export const parseBookingDate = (date) => {
+  if (!date) return null;
+  const [year, month, day] = String(date).split("T")[0].split("-").map(Number);
+  if (!year || !month || !day) return null;
+  return { year, month, day };
+};

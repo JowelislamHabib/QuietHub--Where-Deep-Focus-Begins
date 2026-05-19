@@ -1,18 +1,41 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Input, Label, Modal, toast } from "@heroui/react";
+import {
+  Button,
+  Calendar,
+  DateField,
+  DatePicker,
+  Label,
+  Modal,
+  toast,
+} from "@heroui/react";
+import { CalendarDate } from "@internationalized/date";
 import { useRouter } from "next/navigation";
 import { RiArrowDownSLine, RiCalendarEventLine } from "react-icons/ri";
-import { buildHoursOptions, parseBookingHour } from "@/lib/booking-time";
+import {
+  buildHoursOptions,
+  parseBookingDate,
+  parseBookingHour,
+} from "@/lib/booking-time";
 
-const fieldGroupClassName = "flex flex-col gap-2";
-const labelClassName = "text-sm font-medium text-gray-900";
-const inputClassName =
-  "w-full h-12 rounded border border-stone-200 bg-white px-4 text-sm text-gray-900 transition-colors focus:border-indigo-500 focus:bg-white";
 const fieldLabelClass = "mb-1.5 block text-sm font-medium text-stone-700";
-const timeSelectClassName =
-  "h-12 w-full appearance-none rounded-xl border border-stone-200 bg-white pl-3 pr-9 text-sm text-stone-800 outline-none transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100";
+const fieldClassName =
+  "h-11 w-full rounded-xl border border-stone-200 bg-white text-sm text-stone-800 outline-none transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100";
+const timeSelectClassName = `${fieldClassName} appearance-none pl-3 pr-9`;
+
+const toCalendarDate = (dateStr) => {
+  const parts = parseBookingDate(dateStr);
+  if (!parts) {
+    const now = new Date();
+    return new CalendarDate(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      now.getDate(),
+    );
+  }
+  return new CalendarDate(parts.year, parts.month, parts.day);
+};
 
 const RescheduleBookingButton = ({ booking }) => {
   const router = useRouter();
@@ -20,7 +43,9 @@ const RescheduleBookingButton = ({ booking }) => {
   const hourlyRate =
     Number(booking.hourlyRate ?? booking.room?.hourlyRate) || 0;
 
-  const [date, setDate] = useState(booking.date ?? "");
+  const [selectedDate, setSelectedDate] = useState(() =>
+    toCalendarDate(booking.date),
+  );
   const [startTime, setStartTime] = useState(
     parseBookingHour(booking.startTime),
   );
@@ -48,6 +73,7 @@ const RescheduleBookingButton = ({ booking }) => {
 
     const duration = Number(endTime) - Number(startTime);
     const totalCost = duration * hourlyRate;
+    const date = selectedDate.toString();
 
     setLoading(true);
 
@@ -74,13 +100,12 @@ const RescheduleBookingButton = ({ booking }) => {
         toast.success("Booking rescheduled");
         router.refresh();
       } else {
-        toast.danger(
-          data.message ||
-            "Failed to reschedule booking as it is already booked.",
-        );
+        toast.danger(data.message || "Failed to reschedule booking");
       }
     } catch {
-      toast.danger("Failed to reschedule booking as it is already booked.");
+      toast.danger("Failed to reschedule booking");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,18 +137,75 @@ const RescheduleBookingButton = ({ booking }) => {
               </div>
             </Modal.Header>
 
-            <Modal.Body className="p-8">
+            <Modal.Body className="space-y-4 overflow-visible p-8">
               <form onSubmit={onSubmit} className="space-y-6">
-                <div className={fieldGroupClassName}>
-                  <Label className={labelClassName}>Date</Label>
-                  <Input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className={inputClassName}
-                    isRequired
-                  />
-                </div>
+                <DatePicker
+                  className="w-full"
+                  name="date"
+                  value={selectedDate}
+                  onChange={setSelectedDate}
+                >
+                  <Label className={fieldLabelClass}>Date</Label>
+
+                  <DateField.Group
+                    fullWidth
+                    className={`${fieldClassName} px-3 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100`}
+                  >
+                    <DateField.Input>
+                      {(segment) => (
+                        <DateField.Segment
+                          segment={segment}
+                          className="text-sm text-stone-800"
+                        />
+                      )}
+                    </DateField.Input>
+
+                    <DateField.Suffix>
+                      <DatePicker.Trigger>
+                        <DatePicker.TriggerIndicator className="text-stone-500" />
+                      </DatePicker.Trigger>
+                    </DateField.Suffix>
+                  </DateField.Group>
+
+                  <DatePicker.Popover className="rounded-xl border border-stone-200 bg-white p-3 shadow-xl">
+                    <Calendar aria-label="Reschedule date">
+                      <Calendar.Header className="mb-3 flex items-center justify-between">
+                        <Calendar.YearPickerTrigger className="flex items-center gap-1 text-sm font-semibold text-stone-800">
+                          <Calendar.YearPickerTriggerHeading />
+                          <Calendar.YearPickerTriggerIndicator />
+                        </Calendar.YearPickerTrigger>
+
+                        <div className="flex items-center gap-1">
+                          <Calendar.NavButton
+                            slot="previous"
+                            className="rounded-lg p-1.5 text-stone-500 hover:bg-stone-100"
+                          />
+                          <Calendar.NavButton
+                            slot="next"
+                            className="rounded-lg p-1.5 text-stone-500 hover:bg-stone-100"
+                          />
+                        </div>
+                      </Calendar.Header>
+
+                      <Calendar.Grid className="w-full text-center">
+                        <Calendar.GridHeader className="text-xs font-medium text-stone-400">
+                          {(day) => (
+                            <Calendar.HeaderCell>{day}</Calendar.HeaderCell>
+                          )}
+                        </Calendar.GridHeader>
+
+                        <Calendar.GridBody>
+                          {(date) => (
+                            <Calendar.Cell
+                              date={date}
+                              className="rounded-lg p-1.5 text-sm text-stone-800 hover:bg-indigo-50"
+                            />
+                          )}
+                        </Calendar.GridBody>
+                      </Calendar.Grid>
+                    </Calendar>
+                  </DatePicker.Popover>
+                </DatePicker>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -170,7 +252,9 @@ const RescheduleBookingButton = ({ booking }) => {
                           <option
                             key={option.value}
                             value={option.value}
-                            disabled={Number(option.value) <= Number(startTime)}
+                            disabled={
+                              Number(option.value) <= Number(startTime)
+                            }
                           >
                             {option.label}
                           </option>
