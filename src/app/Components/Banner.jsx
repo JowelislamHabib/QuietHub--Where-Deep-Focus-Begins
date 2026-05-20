@@ -1,49 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@heroui/react";
 import { motion } from "motion/react";
-import { RiSearchLine, RiAddCircleLine } from "react-icons/ri";
-
-const Counter = ({ targetValue }) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const numericTarget = parseInt(targetValue.replace(/[^0-9]/g, ""), 10);
-    let start = 0;
-    const duration = 2000;
-    const startTime = performance.now();
-
-    const updateCount = (currentTime) => {
-      const elapsedTime = currentTime - startTime;
-      if (elapsedTime >= duration) {
-        setCount(numericTarget);
-        return;
-      }
-
-      const progress = elapsedTime / duration;
-      const easeOutQuad = progress * (2 - progress);
-      const nextCount = Math.floor(easeOutQuad * numericTarget);
-
-      setCount(nextCount);
-      requestAnimationFrame(updateCount);
-    };
-
-    requestAnimationFrame(updateCount);
-  }, [targetValue]);
-
-  const suffix = targetValue.replace(/[0-9,]/g, "");
-  const hasComma = targetValue.includes(",");
-
-  return (
-    <span>
-      {hasComma ? count.toLocaleString() : count}
-      {suffix}
-    </span>
-  );
-};
+import AnimatedCounter from "./AnimatedCounter";
+import {
+  RiAddCircleLine,
+  RiBrainLine,
+  RiCalendarScheduleLine,
+  RiSearchLine,
+  RiSparklingLine,
+  RiTimeLine,
+} from "react-icons/ri";
 
 const Banner = () => {
   const stats = [
@@ -89,19 +59,20 @@ const Banner = () => {
       <div className="container relative mx-auto px-4 py-14 sm:py-18 lg:py-24">
         <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-14">
           <div className="flex flex-col gap-6 lg:col-span-5">
-            <p className="inline-flex w-fit items-center rounded-full  bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700 shadow-sm ring-1 ring-white/80">
+            <p className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700 shadow-sm ring-1 ring-white">
+              <RiSparklingLine className="size-3.5" />
               Premium focus platform
             </p>
             <h1 className="text-4xl font-bold tracking-tight text-stone-900 sm:text-5xl lg:text-6xl">
-              Find Your Perfect
+              Book Quiet Spaces
               <span className="block bg-linear-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-                Study Room
+                For Deep Work
               </span>
             </h1>
 
             <p className="max-w-xl text-base font-medium leading-relaxed text-stone-600 sm:text-lg">
-              Browse and book quiet, private study rooms in minutes. List your
-              own room, host focused sessions, and earn from available time.
+              Silentium connects students with quiet, private study rooms across
+              campus. Browse, book by the hour, or list your own space and earn.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -119,9 +90,20 @@ const Banner = () => {
                 </Button>
               </Link>
             </div>
-            <p className="text-sm font-medium text-stone-500">
-              Book by hour. Flexible scheduling. Designed for deep focus.
-            </p>
+            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-stone-500">
+              <li className="inline-flex items-center gap-1.5">
+                <RiTimeLine className="size-4 text-indigo-600" />
+                Book by hour
+              </li>
+              <li className="inline-flex items-center gap-1.5">
+                <RiCalendarScheduleLine className="size-4 text-indigo-600" />
+                Flexible scheduling
+              </li>
+              <li className="inline-flex items-center gap-1.5">
+                <RiBrainLine className="size-4 text-indigo-600" />
+                Designed for deep focus
+              </li>
+            </ul>
           </div>
 
           <div className="px-0 sm:px-8 lg:col-span-7 lg:px-16">
@@ -167,7 +149,7 @@ const Banner = () => {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-base font-bold text-stone-900">
-                      <Counter targetValue={stat.value} />
+                      <AnimatedCounter value={stat.value} />
                     </span>
                     <span className="text-xs font-medium text-stone-500">
                       {stat.label}

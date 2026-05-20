@@ -46,25 +46,33 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="mt-20 border-t border-stone-200/90 bg-white/80 backdrop-blur-sm">
-      <div className="container mx-auto px-4 py-16">
+    <footer className="relative overflow-hidden border-t border-indigo-100/80 bg-[radial-gradient(circle_at_20%_0%,rgba(129,140,248,0.14),transparent_42%),radial-gradient(circle_at_80%_100%,rgba(167,139,250,0.12),transparent_40%),linear-gradient(180deg,#f8faff_0%,#ffffff_55%,#f5f3ff_100%)]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-16 top-0 size-56 rounded-full bg-indigo-200/25 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-12 bottom-0 size-48 rounded-full bg-violet-200/20 blur-3xl"
+      />
+      <div className="container relative mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <h3 className="mb-4 text-xl font-semibold text-gray-900">
+            <h3 className="mb-4 text-xl font-semibold text-stone-900">
               Silentium
             </h3>
-            <p className="mb-4 text-sm leading-relaxed text-gray-500">
+            <p className="mb-4 text-sm leading-relaxed text-stone-500">
               Book distraction-free study rooms in minutes. Host your own room
               and build recurring income.
             </p>
             <div className="space-y-2">
-              <p className="text-gray-600 text-sm">contact@silentium.com</p>
-              <p className="text-gray-600 text-sm">+1 (555) 123-4567</p>
+              <p className="text-sm text-stone-600">contact@silentium.com</p>
+              <p className="text-sm text-stone-600">+1 (555) 123-4567</p>
             </div>
           </div>
 
           <div>
-            <h4 className="mb-4 text-lg font-semibold text-gray-900">
+            <h4 className="mb-4 text-lg font-semibold text-stone-900">
               Explore
             </h4>
             <ul className="space-y-3">
@@ -72,7 +80,7 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="flex items-center gap-2 text-sm text-gray-600 transition-colors duration-150 hover:text-indigo-600"
+                    className="flex items-center gap-2 text-sm text-stone-600 transition-colors duration-150 hover:text-indigo-600"
                   >
                     <link.icon className="text-base" />
                     <span>{link.label}</span>
@@ -84,7 +92,7 @@ const Footer = () => {
 
           {user && (
             <div>
-              <h4 className="mb-4 text-lg font-semibold text-gray-900">
+              <h4 className="mb-4 text-lg font-semibold text-stone-900">
                 Workspace
               </h4>
               <ul className="space-y-3">
@@ -92,7 +100,7 @@ const Footer = () => {
                   <li key={route.href}>
                     <Link
                       href={route.href}
-                      className="flex items-center justify-between text-sm text-gray-600 transition-colors duration-150 hover:text-indigo-600"
+                      className="flex items-center justify-between text-sm text-stone-600 transition-colors duration-150 hover:text-indigo-600"
                     >
                       <span>{route.label}</span>
                       {route.action && (
@@ -108,7 +116,7 @@ const Footer = () => {
           )}
 
           <div>
-            <h4 className="mb-4 text-lg font-semibold text-gray-900">
+            <h4 className="mb-4 text-lg font-semibold text-stone-900">
               Follow updates
             </h4>
             <div className="flex gap-3">
@@ -118,7 +126,7 @@ const Footer = () => {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex size-10 items-center justify-center rounded-full border border-stone-200 bg-white text-gray-500 shadow-sm transition-all duration-150 hover:border-indigo-200 hover:text-indigo-600 hover:shadow-md"
+                  className="inline-flex size-10 items-center justify-center rounded-full border border-indigo-100 bg-white text-stone-500 shadow-sm transition-all duration-150 hover:border-indigo-200 hover:text-indigo-600 hover:shadow-md"
                   aria-label={social.label}
                 >
                   <social.icon className="text-xl" />
@@ -128,8 +136,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-stone-200 pt-8 text-center sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-gray-500 text-sm">
+        <div className="mt-12 flex flex-col gap-2 border-t border-indigo-100/80 pt-8 text-center sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-stone-500">
             © {currentYear} Silentium. All rights reserved.
           </p>
           <p className="text-xs text-stone-400">

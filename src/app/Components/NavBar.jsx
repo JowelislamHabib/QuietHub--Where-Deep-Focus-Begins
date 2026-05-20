@@ -8,9 +8,16 @@ import {
   RiCloseLine,
   RiLogoutBoxLine,
   RiMenuLine,
+  RiSparklingLine,
   RiUserAddLine,
   RiUserLine,
 } from "react-icons/ri";
+
+const dropdownItemClass =
+  "rounded-xl px-2 py-1 outline-none transition-colors data-[hover=true]:bg-indigo-50/80 data-[focus-visible=true]:bg-indigo-50/80";
+
+const dropdownIconBoxClass =
+  "flex size-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -104,77 +111,88 @@ const NavBar = () => {
                 <div className="h-6 w-px bg-stone-200" />
 
                 <Dropdown placement="bottom-end">
-                  <Dropdown.Trigger className="outline-none">
-                    <div className="rounded-full border border-stone-200 bg-white/90 pl-4 shadow-sm backdrop-blur-sm">
-                      <div className="flex items-center gap-3 cursor-pointer">
-                        <div className="text-right hidden lg:block">
-                          <p className="font-sans font-medium text-sm text-stone-900 leading-none">
-                            {user?.name || user?.email || "User"}
-                          </p>
-                        </div>
+                  <Dropdown.Trigger className="rounded-full outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-indigo-500/25">
+                    <div className="flex cursor-pointer items-center gap-2.5 rounded-full border border-stone-200/90 bg-white/90 py-1.5 pl-3 pr-1.5 shadow-sm ring-1 ring-stone-900/5 transition-all hover:border-indigo-200 hover:shadow-md sm:gap-3 sm:pl-4">
+                      <p className="hidden max-w-36 truncate text-sm font-semibold text-stone-900 lg:block">
+                        {user?.name || "Account"}
+                      </p>
 
-                        <Avatar className="w-11 h-11 border-2 border-white shadow-md ring-1 ring-zinc-100 object-cover rounded-full">
+                      <Avatar className="size-10 shrink-0 rounded-full border-2 border-white object-cover shadow-sm ring-1 ring-indigo-100">
+                        <Avatar.Image
+                          referrerPolicy="no-referrer"
+                          alt={user?.name}
+                          src={user?.image}
+                        />
+                        <Avatar.Fallback className="bg-indigo-50 text-sm font-semibold text-indigo-700">
+                          {user?.name?.charAt(0) ?? "S"}
+                        </Avatar.Fallback>
+                      </Avatar>
+                    </div>
+                  </Dropdown.Trigger>
+
+                  <Dropdown.Popover className="w-72 overflow-hidden rounded-2xl border border-stone-200/90 bg-white/95 p-0 shadow-xl shadow-indigo-100/35 ring-1 ring-stone-900/5 backdrop-blur-xl">
+                    <div className="border-b border-stone-200/90 bg-linear-to-r from-indigo-50/90 via-white to-violet-50/50 px-4 py-4">
+                      <p className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-indigo-600">
+                        <RiSparklingLine className="size-3" />
+                        Signed in
+                      </p>
+                      <div className="mt-3 flex items-center gap-3">
+                        <Avatar className="size-11 shrink-0 rounded-full border-2 border-white shadow-sm ring-1 ring-indigo-100">
                           <Avatar.Image
                             referrerPolicy="no-referrer"
                             alt={user?.name}
                             src={user?.image}
                           />
-                          <Avatar.Fallback>
-                            {user?.name?.charAt(0)}
+                          <Avatar.Fallback className="bg-indigo-100 text-sm font-semibold text-indigo-700">
+                            {user?.name?.charAt(0) ?? "S"}
                           </Avatar.Fallback>
                         </Avatar>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-stone-900">
+                            {user?.name || "Silentium member"}
+                          </p>
+                          <p className="truncate text-xs text-stone-500">
+                            {user?.email || "user@example.com"}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </Dropdown.Trigger>
 
-                  <Dropdown.Popover className="w-60 rounded-xl border border-stone-200 bg-white/95 p-2 shadow-md backdrop-blur-sm">
-                    <div className="mb-2 rounded-lg border border-stone-200 bg-stone-50 px-4 py-3">
-                      <p className="font-sans font-normal text-xs text-gray-500 mb-1">
-                        Reservations Account
-                      </p>
-
-                      <p className="font-sans font-medium text-sm text-gray-900 truncate">
-                        {user?.email || "user@example.com"}
-                      </p>
-                    </div>
-
-                    <Dropdown.Menu className="p-0">
+                    <Dropdown.Menu className="gap-0.5 p-2">
                       <Dropdown.Item
                         key="profile"
-                        className="rounded-lg hover:bg-stone-50"
+                        className={dropdownItemClass}
+                        textValue="Account"
                       >
                         <Link
                           href="/my-profile"
-                          className="flex w-full items-center justify-between no-underline py-1"
+                          className="flex w-full items-center gap-3 py-1.5 no-underline"
                         >
-                          <span className="font-sans font-medium text-sm text-gray-900">
-                            Account
+                          <span className={dropdownIconBoxClass}>
+                            <RiUserLine className="size-[18px]" />
                           </span>
-
-                          <span className="text-gray-500">
-                            <RiUserLine className="text-lg" />
+                          <span>
+                            <span className="block text-sm font-semibold text-stone-900">
+                              My profile
+                            </span>
+                            <span className="block text-xs text-stone-500">
+                              Account & preferences
+                            </span>
                           </span>
                         </Link>
                       </Dropdown.Item>
-
-                      <Dropdown.Item
-                        key="logout"
-                        className="rounded-lg mt-1 border-t border-stone-200 pt-2 hover:bg-stone-50"
-                      >
-                        <div
-                          onClick={handleLogout}
-                          className="flex w-full items-center justify-between py-1 cursor-pointer"
-                        >
-                          <span className="font-sans font-medium text-sm text-gray-900">
-                            Sign Out
-                          </span>
-
-                          <span className="text-gray-500">
-                            <RiLogoutBoxLine className="text-lg" />
-                          </span>
-                        </div>
-                      </Dropdown.Item>
                     </Dropdown.Menu>
+
+                    <div className="border-t border-stone-200/90 bg-stone-50/50 p-3">
+                      <Button
+                        type="button"
+                        onPress={handleLogout}
+                        className="flex h-10 w-full items-center justify-center gap-2 rounded-full border border-stone-200 bg-white text-sm font-semibold text-stone-900 shadow-sm transition-all hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700"
+                      >
+                        <RiLogoutBoxLine className="size-[18px]" />
+                        Sign out
+                      </Button>
+                    </div>
                   </Dropdown.Popover>
                 </Dropdown>
               </>

@@ -1,6 +1,7 @@
 "use client";
 
 import { RiFocus3Line, RiSparklingLine } from "react-icons/ri";
+import AnimatedCounter from "../Components/AnimatedCounter";
 import RoomCard from "../Components/RoomCard";
 import RoomsFilter from "../Components/RoomsFilter";
 import { useState, useEffect } from "react";
@@ -124,7 +125,7 @@ const RoomsPage = () => {
                 <RiSparklingLine className="size-3.5" />
                 Find your next room
               </p>
-              <h1 className="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl lg:text-5xl">
+              <h1 className="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
                 Rooms engineered for deep work
               </h1>
               <p className="text-base leading-relaxed text-stone-600 sm:text-lg">
@@ -136,7 +137,7 @@ const RoomsPage = () => {
             <div className="flex flex-wrap gap-3 lg:shrink-0">
               <div className="rounded-xl border border-white/80 bg-white/80 px-6 py-4 shadow-sm ring-1 ring-indigo-100/80 backdrop-blur-sm">
                 <p className="text-2xl font-bold text-stone-900">
-                  {rooms.length}
+                  <AnimatedCounter target={rooms.length} duration={1800} />
                 </p>
                 <p className="text-xs font-medium uppercase tracking-wide text-stone-500">
                   Live rooms
@@ -145,10 +146,19 @@ const RoomsPage = () => {
               {rooms.length > 0 && (
                 <div className="rounded-xl border border-white/80 bg-white/80 px-6 py-4 shadow-sm ring-1 ring-indigo-100/80 backdrop-blur-sm">
                   <p className="text-2xl font-bold text-indigo-600">
-                    ${minRateGlobal}
+                    <AnimatedCounter
+                      target={minRateGlobal}
+                      prefix="$"
+                      duration={1600}
+                    />
                     {maxRateGlobal > minRateGlobal && (
                       <span className="text-lg text-stone-400">
-                        –${maxRateGlobal}
+                        –
+                        <AnimatedCounter
+                          target={maxRateGlobal}
+                          prefix="$"
+                          duration={1800}
+                        />
                       </span>
                     )}
                   </p>
