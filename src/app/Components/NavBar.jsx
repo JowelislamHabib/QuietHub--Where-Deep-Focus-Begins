@@ -31,10 +31,10 @@ const NavBar = () => {
   };
 
   const navLinkClass = (path) =>
-    `font-sans text-sm font-medium no-underline transition-colors duration-150 ${
+    `rounded-full px-4 py-2 font-sans text-sm font-semibold no-underline transition-all duration-200 ${
       pathname === path
-        ? "text-indigo-500 !font-bold"
-        : "text-gray-500  hover:text-gray-900"
+        ? "bg-indigo-50 text-indigo-700 ring-1 ring-indigo-100"
+        : "text-stone-600 hover:bg-white hover:text-stone-900"
     }`;
 
   const mobileNavLinkClass = (path) =>
@@ -43,16 +43,17 @@ const NavBar = () => {
     }`;
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-stone-50 border-b border-stone-200">
+    <nav className="sticky top-0 z-50 w-full border-b border-white/80 bg-white/60 backdrop-blur-xl">
       <div className="container mx-auto px-4">
-        <div className="h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 no-underline">
-            <span className="font-heading font-bold text-2xl text-gray-900">
+        <div className="flex h-20 items-center justify-between">
+          <Link href="/" className="no-underline">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-heading text-2xl font-bold tracking-tight text-stone-900 shadow-sm ring-1 ring-stone-100">
+              <span className="size-2 rounded-full bg-indigo-500 shadow-[0_0_0_4px_rgba(99,102,241,0.15)]" />
               Silentium
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden items-center gap-2 rounded-full border border-stone-200/80 bg-white/80 p-1 shadow-sm md:flex">
             <Link href="/" className={navLinkClass("/")}>
               Home
             </Link>
@@ -84,17 +85,17 @@ const NavBar = () => {
             )}
           </div>
 
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-4">
             {!user ? (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
                 <Link href="/login" className={navLinkClass("/login")}>
                   Sign In
                 </Link>
 
                 <Link href="/register">
-                  <Button className="bg-indigo-500 text-white font-sans text-sm font-medium rounded-full px-4 py-2 transition-colors duration-150 hover:bg-indigo-600 flex items-center gap-2">
+                  <Button className="flex items-center gap-2 rounded-full bg-stone-900 px-4 py-2 font-sans text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-indigo-700 hover:shadow-md">
                     <RiUserAddLine className="text-lg" />
-                    Register
+                    Create account
                   </Button>
                 </Link>
               </div>
@@ -104,10 +105,10 @@ const NavBar = () => {
 
                 <Dropdown placement="bottom-end">
                   <Dropdown.Trigger className="outline-none">
-                    <div className="rounded-full border-2 pl-4">
+                    <div className="rounded-full border border-stone-200 bg-white/90 pl-4 shadow-sm backdrop-blur-sm">
                       <div className="flex items-center gap-3 cursor-pointer">
                         <div className="text-right hidden lg:block">
-                          <p className="font-sans font-medium text-sm text-gray-900 leading-none">
+                          <p className="font-sans font-medium text-sm text-stone-900 leading-none">
                             {user?.name || user?.email || "User"}
                           </p>
                         </div>
@@ -126,8 +127,8 @@ const NavBar = () => {
                     </div>
                   </Dropdown.Trigger>
 
-                  <Dropdown.Popover className="bg-stone-100 border border-stone-200 rounded-xl shadow-md p-2 w-60">
-                    <div className="px-4 py-3 mb-2 bg-stone-50 rounded-lg border border-stone-200">
+                  <Dropdown.Popover className="w-60 rounded-xl border border-stone-200 bg-white/95 p-2 shadow-md backdrop-blur-sm">
+                    <div className="mb-2 rounded-lg border border-stone-200 bg-stone-50 px-4 py-3">
                       <p className="font-sans font-normal text-xs text-gray-500 mb-1">
                         Reservations Account
                       </p>
@@ -182,7 +183,7 @@ const NavBar = () => {
 
           <Button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-gray-900 bg-stone-100 rounded-full hover:bg-stone-200 transition-colors duration-150"
+            className="rounded-full border border-stone-200 bg-white p-2 text-stone-900 shadow-sm transition-colors duration-150 hover:bg-stone-100 md:hidden"
           >
             {isOpen ? (
               <RiCloseLine className="text-xl" />
@@ -193,7 +194,7 @@ const NavBar = () => {
         </div>
 
         {isOpen && (
-          <div className="md:hidden bg-stone-50 border-t border-stone-200 py-8 space-y-6">
+          <div className="space-y-6 border-t border-stone-200 bg-white/95 py-8 backdrop-blur-sm md:hidden">
             <div className="space-y-4">
               <Link href="/" className={mobileNavLinkClass("/")}>
                 Home
@@ -234,14 +235,14 @@ const NavBar = () => {
                 <div className="flex flex-col gap-4">
                   <Link
                     href="/login"
-                    className="block text-center py-2.5 rounded-full border border-stone-200 bg-stone-100 text-gray-900 font-sans text-sm font-medium no-underline"
+                    className="block rounded-full border border-stone-200 bg-stone-100 py-2.5 text-center font-sans text-sm font-medium text-gray-900 no-underline"
                   >
                     Sign In
                   </Link>
 
                   <Link
                     href="/register"
-                    className="block text-center py-2.5 rounded-full bg-indigo-500 text-white font-sans text-sm font-medium no-underline flex items-center justify-center gap-2"
+                    className="flex items-center justify-center gap-2 rounded-full bg-stone-900 py-2.5 text-center font-sans text-sm font-medium text-white no-underline"
                   >
                     <RiUserAddLine className="text-lg" />
                     Register

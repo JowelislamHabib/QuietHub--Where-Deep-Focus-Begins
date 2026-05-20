@@ -34,7 +34,6 @@ const listingTips = [
   "Pick amenities guests actually get; keeps reviews honest.",
 ];
 
-/** Core inputs before amenities: name, description, image, floor, capacity, hourly rate */
 const LISTING_FIELD_COUNT = 6;
 
 const cardClassName =

@@ -48,8 +48,8 @@ const Counter = ({ targetValue }) => {
 const Banner = () => {
   const stats = [
     {
-      value: "1,200+",
-      label: "Hours Studied",
+      value: "15,000+",
+      label: "Booked Study Hours",
       emojiSrc: "/emojis/hourglass-3d.png",
       emojiFallback: "⏳",
       positionClass: "left-0 top-1/2 -translate-y-1/2 -translate-x-1/2",
@@ -57,8 +57,8 @@ const Banner = () => {
       delay: 0,
     },
     {
-      value: "350+",
-      label: "Rooms Reserved",
+      value: "2,300+",
+      label: "Bookings Completed",
       emojiSrc: "/emojis/house.png",
       emojiFallback: "🏢",
       positionClass: "right-0 top-0 translate-x-1/2 -translate-y-1/2",
@@ -66,8 +66,8 @@ const Banner = () => {
       delay: 0.4,
     },
     {
-      value: "98%",
-      label: "Satisfaction",
+      value: "99%",
+      label: "Student Satisfaction",
       emojiSrc: "/emojis/heart-3d.png",
       emojiFallback: "✨",
       positionClass: "left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2",
@@ -77,45 +77,65 @@ const Banner = () => {
   ];
 
   return (
-    <section className="bg-stone-50 overflow-hidden">
-      <div className="container mx-auto py-16 px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-          <div className="lg:col-span-5 flex flex-col gap-6">
-            <h1 className="text-4xl font-bold text-gray-900">
-              Find Your Perfect Study Space
+    <section className="relative overflow-hidden border-b border-indigo-100/60 bg-[radial-gradient(circle_at_12%_8%,rgba(129,140,248,0.4),transparent_34%),radial-gradient(circle_at_92%_12%,rgba(167,139,250,0.32),transparent_30%),linear-gradient(170deg,#f7f9ff_0%,#ffffff_48%,#f7f3ff_100%)]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-24 top-10 size-80 rounded-full bg-indigo-300/20 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-20 bottom-0 size-72 rounded-full bg-violet-300/20 blur-3xl"
+      />
+      <div className="container relative mx-auto px-4 py-14 sm:py-18 lg:py-24">
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-14">
+          <div className="flex flex-col gap-6 lg:col-span-5">
+            <p className="inline-flex w-fit items-center rounded-full  bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700 shadow-sm ring-1 ring-white/80">
+              Premium focus platform
+            </p>
+            <h1 className="text-4xl font-bold tracking-tight text-stone-900 sm:text-5xl lg:text-6xl">
+              Find Your Perfect
+              <span className="block bg-linear-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                Study Room
+              </span>
             </h1>
 
-            <p className="text-base text-gray-500 font-medium">
-              Browse and book quiet, private study rooms in your library. List
-              your own space and earn while helping others focus.
+            <p className="max-w-xl text-base font-medium leading-relaxed text-stone-600 sm:text-lg">
+              Browse and book quiet, private study rooms in minutes. List your
+              own room, host focused sessions, and earn from available time.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Link href="/rooms" className="w-full sm:w-auto">
-                <Button className="w-full h-12 bg-indigo-500 text-white rounded-full text-base font-medium hover:bg-indigo-600 transition-colors duration-150 flex items-center justify-center gap-2 shadow-sm">
+                <Button className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-stone-900 px-6 text-base font-semibold text-white shadow-sm transition-all duration-200 hover:bg-indigo-700 hover:shadow-md sm:w-auto">
                   <RiSearchLine className="text-lg" />
                   <span>Explore Rooms</span>
                 </Button>
               </Link>
 
               <Link href="/add-room" className="w-full sm:w-auto">
-                <Button className="w-full h-12 border border-stone-200 bg-stone-100 text-gray-900 rounded-full text-base font-medium hover:bg-stone-200 transition-colors duration-150 flex items-center justify-center gap-2 shadow-sm">
+                <Button className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-stone-200 bg-white/90 px-6 text-base font-semibold text-stone-900 shadow-sm backdrop-blur-sm transition-all duration-200 hover:border-indigo-200 hover:text-indigo-700 hover:shadow-md sm:w-auto">
                   <RiAddCircleLine className="text-lg" />
                   <span>List Your Room</span>
                 </Button>
               </Link>
             </div>
+            <p className="text-sm font-medium text-stone-500">
+              Book by hour. Flexible scheduling. Designed for deep focus.
+            </p>
           </div>
 
-          <div className="lg:col-span-7 px-16 lg:px-24">
-            <div className="relative w-full h-96">
-              <Image
-                src="/heroImage.jpg"
-                alt="Study room"
-                fill
-                priority
-                className="object-cover rounded-xl"
-              />
+          <div className="px-0 sm:px-8 lg:col-span-7 lg:px-16">
+            <div className="relative h-80 w-full rounded-[2rem] border border-white/80 bg-white/35 p-3 shadow-2xl shadow-indigo-100/60 ring-1 ring-indigo-100/70 backdrop-blur-xl sm:h-96 lg:h-112">
+              <div className="relative h-full w-full overflow-hidden rounded-[1.6rem]">
+                <Image
+                  src="/heroImage.jpg"
+                  alt="Premium study room interior"
+                  fill
+                  priority
+                  className="object-cover shadow-2xl ring-1 ring-white/70"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-stone-900/35 via-transparent to-transparent" />
+              </div>
 
               {stats.map((stat, index) => (
                 <motion.div
@@ -128,9 +148,9 @@ const Banner = () => {
                     ease: "easeInOut",
                     delay: stat.delay,
                   }}
-                  className={`absolute ${stat.positionClass} bg-stone-50/80 backdrop-blur-md border border-stone-200 rounded-full p-4 flex items-center gap-4 min-w-48 z-10`}
+                  className={`absolute ${stat.positionClass} z-10 flex min-w-48 items-center gap-4 rounded-full border border-white/80 bg-white/85 p-4 shadow-lg shadow-indigo-100/70 ring-1 ring-indigo-100/80 backdrop-blur-md`}
                 >
-                  <div className="w-12 h-12 bg-stone-100/50 rounded-full flex items-center justify-center border border-stone-200 flex-shrink-0 relative overflow-hidden">
+                  <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-indigo-100 bg-indigo-50/60">
                     {stat.emojiSrc ? (
                       <div className="relative w-8 h-8">
                         <Image
@@ -146,10 +166,10 @@ const Banner = () => {
                     )}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-gray-900 font-bold text-base">
+                    <span className="text-base font-bold text-stone-900">
                       <Counter targetValue={stat.value} />
                     </span>
-                    <span className="text-gray-500 text-xs font-medium">
+                    <span className="text-xs font-medium text-stone-500">
                       {stat.label}
                     </span>
                   </div>
