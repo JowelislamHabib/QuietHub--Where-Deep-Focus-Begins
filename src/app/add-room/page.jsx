@@ -64,7 +64,7 @@ const AddRoomPage = () => {
   const amenityOptions = [
     "Whiteboard",
     "Projector",
-    "Wi‑Fi",
+    "Wi-Fi",
     "Power Outlets",
     "Quiet Zone",
     "Air Conditioning",
