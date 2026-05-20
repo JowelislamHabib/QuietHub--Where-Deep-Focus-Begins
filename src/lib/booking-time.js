@@ -27,6 +27,26 @@ export const parseBookingDate = (date) => {
   return { year, month, day };
 };
 
+export const isBookingOnOrAfterToday = (date) => {
+  const parts = parseBookingDate(date);
+  if (!parts) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const bookingDay = new Date(parts.year, parts.month - 1, parts.day);
+  bookingDay.setHours(0, 0, 0, 0);
+  return bookingDay >= today;
+};
+
+export const isBookingBeforeToday = (date) => {
+  const parts = parseBookingDate(date);
+  if (!parts) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const bookingDay = new Date(parts.year, parts.month - 1, parts.day);
+  bookingDay.setHours(0, 0, 0, 0);
+  return bookingDay < today;
+};
+
 export const isSelectedDateToday = (dateStr) => {
   const parts = parseBookingDate(dateStr);
   if (!parts) return false;
