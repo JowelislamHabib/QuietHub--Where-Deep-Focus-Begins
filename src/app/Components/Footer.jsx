@@ -1,12 +1,18 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { RiHomeLine, RiHotelLine, RiInformationLine } from "react-icons/ri";
 import {
+  RiAddCircleLine,
+  RiBuildingLine,
+  RiCalendarCheckLine,
+  RiDoorOpenLine,
   RiFacebookFill,
-  RiTwitterXLine,
-  RiLinkedinFill,
+  RiHomeLine,
+  RiHotelLine,
+  RiInformationLine,
   RiInstagramLine,
+  RiLinkedinFill,
+  RiTwitterXLine,
 } from "react-icons/ri";
 import { authClient } from "@/lib/auth-client";
 
@@ -21,15 +27,10 @@ const Footer = () => {
   ];
 
   const privateRoutes = [
-    { href: "/add-room", label: "Add Room", requiresAuth: true },
-    { href: "/my-listings", label: "My Listings", requiresAuth: true },
-    { href: "/my-bookings", label: "My Bookings", requiresAuth: true },
-    {
-      href: "/rooms",
-      label: "Room Details",
-      requiresAuth: true,
-      action: "Book Now",
-    },
+    { href: "/add-room", label: "Add Room", icon: RiAddCircleLine },
+    { href: "/my-listings", label: "My Listings", icon: RiBuildingLine },
+    { href: "/my-bookings", label: "My Bookings", icon: RiCalendarCheckLine },
+    { href: "/rooms", label: "Room Details", icon: RiDoorOpenLine },
   ];
 
   const socialLinks = [
@@ -90,30 +91,27 @@ const Footer = () => {
             </ul>
           </div>
 
-          {user && (
-            <div>
-              <h4 className="mb-4 text-lg font-semibold text-stone-900">
-                Workspace
-              </h4>
-              <ul className="space-y-3">
-                {privateRoutes.map((route) => (
-                  <li key={route.href}>
-                    <Link
-                      href={route.href}
-                      className="flex items-center justify-between text-sm text-stone-600 transition-colors duration-150 hover:text-indigo-600"
-                    >
-                      <span>{route.label}</span>
-                      {route.action && (
-                        <span className="bg-indigo-50 text-indigo-600 text-xs px-2 py-1 rounded">
-                          {route.action}
-                        </span>
-                      )}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <div>
+            <h4 className="mb-4 text-lg font-semibold text-stone-900">
+              {user ? "Workspace" : "Private"}
+            </h4>
+            {!user && (
+              <p className="-mt-2 mb-4 text-xs text-stone-500">Sign in to access</p>
+            )}
+            <ul className="space-y-3">
+              {privateRoutes.map((route) => (
+                <li key={route.label}>
+                  <Link
+                    href={route.href}
+                    className="flex items-center gap-2 text-sm text-stone-600 transition-colors duration-150 hover:text-indigo-600"
+                  >
+                    <route.icon className="text-base" />
+                    <span>{route.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <div>
             <h4 className="mb-4 text-lg font-semibold text-stone-900">

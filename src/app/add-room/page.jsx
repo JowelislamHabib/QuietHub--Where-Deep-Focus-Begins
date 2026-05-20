@@ -237,7 +237,7 @@ const AddRoomPage = () => {
                   />
                 ) : userAvatarSrc ? (
                   <Image
-                    src="https://images.unsplash.com/photo-1622653533660-a1538fe8424c"
+                    src="https://placehold.net/400x600.png"
                     alt={user?.name ?? "Host"}
                     fill
                     unoptimized
@@ -334,66 +334,66 @@ const AddRoomPage = () => {
                   description="Name, description, and cover image for your listing card."
                 />
                 <div className="space-y-5 pt-2">
-                <TextField
-                  name="name"
-                  isRequired
-                  className={fieldGroupClassName}
-                >
-                  <Label className={labelClassName}>Room name</Label>
-                  <div className="relative">
-                    <RiHotelLine className="pointer-events-none absolute left-3.5 top-1/2 z-10 size-[18px] -translate-y-1/2 text-stone-400" />
-                    <Input
-                      placeholder="e.g. Silentium Alcove"
-                      className={inputClassName}
-                      value={previewName}
-                      onChange={(e) => setPreviewName(e.target.value)}
-                    />
-                  </div>
-                  <FieldError className="text-sm font-medium text-rose-500" />
-                </TextField>
+                  <TextField
+                    name="name"
+                    isRequired
+                    className={fieldGroupClassName}
+                  >
+                    <Label className={labelClassName}>Room name</Label>
+                    <div className="relative">
+                      <RiHotelLine className="pointer-events-none absolute left-3.5 top-1/2 z-10 size-[18px] -translate-y-1/2 text-stone-400" />
+                      <Input
+                        placeholder="e.g. Silentium Alcove"
+                        className={inputClassName}
+                        value={previewName}
+                        onChange={(e) => setPreviewName(e.target.value)}
+                      />
+                    </div>
+                    <FieldError className="text-sm font-medium text-rose-500" />
+                  </TextField>
 
-                <TextField
-                  name="description"
-                  isRequired
-                  className={fieldGroupClassName}
-                >
-                  <Label className={labelClassName}>Description</Label>
-                  <div className="relative">
-                    <RiAlignLeft className="pointer-events-none absolute left-3.5 top-4 z-10 size-[18px] text-stone-400" />
-                    <TextArea
-                      placeholder="Lighting, acoustics, seating, and what makes this room great for focus."
-                      rows={4}
-                      className={textAreaClassName}
-                    />
-                  </div>
-                  <FieldError className="text-sm font-medium text-rose-500" />
-                </TextField>
+                  <TextField
+                    name="description"
+                    isRequired
+                    className={fieldGroupClassName}
+                  >
+                    <Label className={labelClassName}>Description</Label>
+                    <div className="relative">
+                      <RiAlignLeft className="pointer-events-none absolute left-3.5 top-4 z-10 size-[18px] text-stone-400" />
+                      <TextArea
+                        placeholder="Lighting, acoustics, seating, and what makes this room great for focus."
+                        rows={4}
+                        className={textAreaClassName}
+                      />
+                    </div>
+                    <FieldError className="text-sm font-medium text-rose-500" />
+                  </TextField>
 
-                <TextField
-                  name="image"
-                  type="url"
-                  isRequired
-                  className={fieldGroupClassName}
-                >
-                  <Label className={labelClassName}>Cover image URL</Label>
-                  <div className="relative">
-                    <RiImageLine className="pointer-events-none absolute left-3.5 top-1/2 z-10 size-[18px] -translate-y-1/2 text-stone-400" />
-                    <Input
-                      type="url"
-                      placeholder="https://images.unsplash.com/photo-..."
-                      className={inputClassName}
-                      value={previewUrl}
-                      onChange={(e) => {
-                        setPreviewUrl(e.target.value);
-                        setPreviewError(false);
-                      }}
-                    />
-                  </div>
-                  <p className={hintClassName}>
-                    Use a wide, well-lit photo. Preview updates as you type.
-                  </p>
-                  <FieldError className="text-sm font-medium text-rose-600" />
-                </TextField>
+                  <TextField
+                    name="image"
+                    type="url"
+                    isRequired
+                    className={fieldGroupClassName}
+                  >
+                    <Label className={labelClassName}>Cover image URL</Label>
+                    <div className="relative">
+                      <RiImageLine className="pointer-events-none absolute left-3.5 top-1/2 z-10 size-[18px] -translate-y-1/2 text-stone-400" />
+                      <Input
+                        type="url"
+                        placeholder="https://images.yourroom.com/photo-..."
+                        className={inputClassName}
+                        value={previewUrl}
+                        onChange={(e) => {
+                          setPreviewUrl(e.target.value);
+                          setPreviewError(false);
+                        }}
+                      />
+                    </div>
+                    <p className={hintClassName}>
+                      Use a wide, well-lit photo. Preview updates as you type.
+                    </p>
+                    <FieldError className="text-sm font-medium text-rose-600" />
+                  </TextField>
                 </div>
               </div>
 
