@@ -48,11 +48,7 @@ const signupBenefits = [
   },
 ];
 
-const trustPoints = [
-  "Free to join",
-  "No credit card",
-  "Cancel anytime",
-];
+const trustPoints = ["Free to join", "No credit card", "Cancel anytime"];
 
 const labelClassName = "text-sm font-medium text-stone-800";
 const inputClassName =
@@ -124,7 +120,7 @@ const RegisterPage = () => {
               Start free today
             </p>
             <h1 className="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
-              Join Silentium and{" "}
+              Join QuietHub and{" "}
               <span className="bg-linear-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
                 focus faster
               </span>
@@ -350,7 +346,9 @@ const RegisterPage = () => {
                     isDisabled={isSubmitting}
                     className="mt-1 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-stone-900 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow-md disabled:opacity-60"
                   >
-                    {isSubmitting ? "Creating account..." : "Create free account"}
+                    {isSubmitting
+                      ? "Creating account..."
+                      : "Create free account"}
                     {!isSubmitting && <RiArrowRightLine className="size-4" />}
                   </Button>
                 </Form>

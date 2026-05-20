@@ -34,7 +34,7 @@ const testimonials = [
     name: "Sarah J.",
     role: "Graduate Researcher",
     quote:
-      "Silentium helped me lock a quiet room before exam week. My study consistency improved within the first month.",
+      "QuietHub helped me lock a quiet room before exam week. My study consistency improved within the first month.",
     avatar: 32,
     rating: 5,
   },

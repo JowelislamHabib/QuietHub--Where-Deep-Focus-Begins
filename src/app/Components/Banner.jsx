@@ -73,7 +73,7 @@ const Banner = () => {
             </h1>
 
             <p className="max-w-xl text-base font-medium leading-relaxed text-stone-600 sm:text-lg">
-              Silentium connects students with quiet, private study rooms across
+              QuietHub connects students with quiet, private study rooms across
               campus. Browse, book by the hour, or list your own space and earn.
             </p>
 
@@ -137,29 +137,29 @@ const Banner = () => {
                     }}
                     className={`absolute ${stat.positionClass} z-20 flex max-w-[calc(100%-1rem)] items-center gap-2.5 rounded-full border border-white/80 bg-white/90 px-3 py-2.5 shadow-lg shadow-indigo-100/70 ring-1 ring-indigo-100/80 backdrop-blur-md max-sm:whitespace-nowrap sm:max-w-none sm:min-w-48 sm:gap-4 sm:p-4 ${stat.hideOnMobile ? "hidden sm:flex" : ""}`}
                   >
-                  <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-indigo-100 bg-indigo-50/60 sm:size-12">
-                    {stat.emojiSrc ? (
-                      <div className="relative w-8 h-8">
-                        <Image
-                          src={stat.emojiSrc}
-                          alt={stat.label}
-                          fill
-                          className="object-contain"
-                          unoptimized
-                        />
-                      </div>
-                    ) : (
-                      <span className="text-2xl">{stat.emojiFallback}</span>
-                    )}
-                  </div>
-                  <div className="flex min-w-0 flex-row flex-nowrap items-center gap-2 sm:flex-col sm:items-start sm:gap-0.5">
-                    <span className="shrink-0 text-sm font-bold text-stone-900 sm:text-base">
-                      <AnimatedCounter value={stat.value} />
-                    </span>
-                    <span className="whitespace-nowrap text-[11px] font-medium text-stone-500 sm:text-xs">
-                      {stat.label}
-                    </span>
-                  </div>
+                    <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-indigo-100 bg-indigo-50/60 sm:size-12">
+                      {stat.emojiSrc ? (
+                        <div className="relative w-8 h-8">
+                          <Image
+                            src={stat.emojiSrc}
+                            alt={stat.label}
+                            fill
+                            className="object-contain"
+                            unoptimized
+                          />
+                        </div>
+                      ) : (
+                        <span className="text-2xl">{stat.emojiFallback}</span>
+                      )}
+                    </div>
+                    <div className="flex min-w-0 flex-row flex-nowrap items-center gap-2 sm:flex-col sm:items-start sm:gap-0.5">
+                      <span className="shrink-0 text-sm font-bold text-stone-900 sm:text-base">
+                        <AnimatedCounter value={stat.value} />
+                      </span>
+                      <span className="whitespace-nowrap text-[11px] font-medium text-stone-500 sm:text-xs">
+                        {stat.label}
+                      </span>
+                    </div>
                   </motion.div>
                 ))}
               </div>

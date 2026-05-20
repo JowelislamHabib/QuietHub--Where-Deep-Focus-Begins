@@ -97,7 +97,12 @@ const NavBar = () => {
 
   const primaryMobileLinks = [
     { href: "/", label: "Home", icon: RiHomeLine, sub: "Back to landing" },
-    { href: "/rooms", label: "Rooms", icon: RiSearchLine, sub: "Browse study spaces" },
+    {
+      href: "/rooms",
+      label: "Rooms",
+      icon: RiSearchLine,
+      sub: "Browse study spaces",
+    },
   ];
 
   const authMobileLinks = user
@@ -132,8 +137,8 @@ const NavBar = () => {
             className="inline-flex shrink-0 items-center no-underline transition-opacity hover:opacity-90"
           >
             <Image
-              src="/Silentium.png"
-              alt="Silentium"
+              src="/QuietHub.png"
+              alt="QuietHub"
               width={LOGO_WIDTH}
               height={LOGO_HEIGHT}
               priority
@@ -230,7 +235,7 @@ const NavBar = () => {
                         </Avatar>
                         <div className="min-w-0">
                           <p className="truncate text-sm font-semibold text-stone-900">
-                            {user?.name || "Silentium member"}
+                            {user?.name || "QuietHub member"}
                           </p>
                           <p className="truncate text-xs text-stone-500">
                             {user?.email || "user@example.com"}
@@ -388,7 +393,7 @@ const NavBar = () => {
                           Signed in
                         </p>
                         <p className="truncate text-sm font-semibold text-stone-900">
-                          {user?.name || "Silentium member"}
+                          {user?.name || "QuietHub member"}
                         </p>
                       </div>
                     </div>

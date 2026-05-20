@@ -179,7 +179,7 @@ const LoginPage = () => {
             <div className="mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-stone-200/90 bg-white/90 shadow-xl shadow-indigo-100/40 ring-1 ring-stone-900/5 backdrop-blur-sm">
               <div className="border-b border-stone-200/90 bg-linear-to-r from-indigo-50/80 via-white to-violet-50/40 px-6 py-6 sm:px-8">
                 <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
-                  Sign in to Silentium
+                  Sign in to QuietHub
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-stone-600">
                   Fastest path: Google in one tap. Or use your email below.
@@ -299,7 +299,7 @@ const LoginPage = () => {
 
               <div className="border-t border-stone-200/90 bg-stone-50/50 px-6 py-4 text-center sm:px-8">
                 <p className="text-sm text-stone-600">
-                  New to Silentium?{" "}
+                  New to QuietHub?{" "}
                   <Link
                     href="/register"
                     className="font-semibold text-indigo-600 hover:text-indigo-700"

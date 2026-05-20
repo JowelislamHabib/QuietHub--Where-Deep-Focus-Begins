@@ -343,7 +343,7 @@ const AddRoomPage = () => {
                     <div className="relative">
                       <RiHotelLine className="pointer-events-none absolute left-3.5 top-1/2 z-10 size-[18px] -translate-y-1/2 text-stone-400" />
                       <Input
-                        placeholder="e.g. Silentium Alcove"
+                        placeholder="e.g. QuietHub Alcove"
                         className={inputClassName}
                         value={previewName}
                         onChange={(e) => setPreviewName(e.target.value)}

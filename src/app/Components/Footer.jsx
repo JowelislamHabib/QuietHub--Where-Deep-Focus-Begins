@@ -68,8 +68,8 @@ const Footer = () => {
               className="mb-4 inline-flex transition-opacity hover:opacity-90"
             >
               <Image
-                src="/Silentium.png"
-                alt="Silentium"
+                src="/QuietHub.png"
+                alt="QuietHub"
                 width={LOGO_WIDTH}
                 height={LOGO_HEIGHT}
                 className="h-8 w-auto sm:h-9"
@@ -80,7 +80,7 @@ const Footer = () => {
               and build recurring income.
             </p>
             <div className="space-y-2">
-              <p className="text-sm text-stone-600">contact@silentium.com</p>
+              <p className="text-sm text-stone-600">contact@QuietHub.com</p>
               <p className="text-sm text-stone-600">+1 (555) 123-4567</p>
             </div>
           </div>
@@ -109,7 +109,9 @@ const Footer = () => {
               {user ? "Workspace" : "Private"}
             </h4>
             {!user && (
-              <p className="-mt-2 mb-4 text-xs text-stone-500">Sign in to access</p>
+              <p className="-mt-2 mb-4 text-xs text-stone-500">
+                Sign in to access
+              </p>
             )}
             <ul className="space-y-3">
               {privateRoutes.map((route) => (
@@ -149,7 +151,7 @@ const Footer = () => {
 
         <div className="mt-12 flex flex-col gap-2 border-t border-indigo-100/80 pt-8 text-center sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-stone-500">
-            © {currentYear} Silentium. All rights reserved.
+            © {currentYear} QuietHub. All rights reserved.
           </p>
           <p className="text-xs text-stone-400">
             Designed for deep focus sessions.

@@ -84,7 +84,7 @@ export default async function Home() {
                 Study spaces made simple, practical, and dependable
               </h2>
               <p className="max-w-2xl text-sm leading-relaxed text-stone-500 sm:text-base">
-                Silentium built for one goal: remove booking chaos so students
+                QuietHub built for one goal: remove booking chaos so students
                 can focus faster. Every listing emphasizes clarity, quality, and
                 confidence before reservation starts.
               </p>
@@ -168,7 +168,7 @@ export default async function Home() {
                 Real results from focused students and hosts
               </h2>
               <p className="max-w-2xl text-sm leading-relaxed text-stone-500 sm:text-base">
-                Hear how Silentium helps learners stay consistent and hosts fill
+                Hear how QuietHub helps learners stay consistent and hosts fill
                 unused hours with reliable bookings.
               </p>
             </div>
@@ -198,7 +198,7 @@ export default async function Home() {
                   Ready to book right room or publish your own?
                 </h3>
                 <p className="mt-3 max-w-2xl text-sm text-stone-300 sm:text-base">
-                  Join students and hosts using Silentium for faster booking,
+                  Join students and hosts using QuietHub for faster booking,
                   cleaner schedules, and better outcomes each week.
                 </p>
               </div>
