@@ -23,6 +23,11 @@ export const metadata = {
   },
   description:
     "Calm · Minimal · Intentional spaces, sessions, and reservations.",
+  icons: {
+    icon: [{ url: "/silentium-favicon.png", type: "image/png" }],
+    shortcut: "/silentium-favicon.png",
+    apple: "/silentium-favicon.png",
+  },
 };
 
 export default function RootLayout({ children }) {

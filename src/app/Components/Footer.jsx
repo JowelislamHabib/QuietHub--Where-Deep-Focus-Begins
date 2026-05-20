@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   RiAddCircleLine,
@@ -15,6 +16,9 @@ import {
   RiTwitterXLine,
 } from "react-icons/ri";
 import { authClient } from "@/lib/auth-client";
+
+const LOGO_WIDTH = 714;
+const LOGO_HEIGHT = 268;
 
 const Footer = () => {
   const { data: session } = authClient.useSession();
@@ -59,9 +63,18 @@ const Footer = () => {
       <div className="container relative mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <h3 className="mb-4 text-xl font-semibold text-stone-900">
-              Silentium
-            </h3>
+            <Link
+              href="/"
+              className="mb-4 inline-flex transition-opacity hover:opacity-90"
+            >
+              <Image
+                src="/Silentium.png"
+                alt="Silentium"
+                width={LOGO_WIDTH}
+                height={LOGO_HEIGHT}
+                className="h-8 w-auto sm:h-9"
+              />
+            </Link>
             <p className="mb-4 text-sm leading-relaxed text-stone-500">
               Book distraction-free study rooms in minutes. Host your own room
               and build recurring income.

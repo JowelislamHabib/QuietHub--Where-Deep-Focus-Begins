@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, Button, Dropdown } from "@heroui/react";
@@ -20,6 +21,9 @@ const dropdownIconBoxClass =
   "flex size-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100";
 
 import { authClient } from "@/lib/auth-client";
+
+const LOGO_WIDTH = 714;
+const LOGO_HEIGHT = 268;
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,11 +57,18 @@ const NavBar = () => {
     <nav className="sticky top-0 z-50 w-full border-b border-white/80 bg-white/60 backdrop-blur-xl">
       <div className="container mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
-          <Link href="/" className="no-underline">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-heading text-2xl font-bold tracking-tight text-stone-900 shadow-sm ring-1 ring-stone-100">
-              <span className="size-2 rounded-full bg-indigo-500 shadow-[0_0_0_4px_rgba(99,102,241,0.15)]" />
-              Silentium
-            </span>
+          <Link
+            href="/"
+            className="inline-flex shrink-0 items-center no-underline transition-opacity hover:opacity-90"
+          >
+            <Image
+              src="/Silentium.png"
+              alt="Silentium"
+              width={LOGO_WIDTH}
+              height={LOGO_HEIGHT}
+              priority
+              className="h-9 w-auto sm:h-10"
+            />
           </Link>
 
           <div className="hidden items-center gap-2 rounded-full border border-stone-200/80 bg-white/80 p-1 shadow-sm md:flex">
