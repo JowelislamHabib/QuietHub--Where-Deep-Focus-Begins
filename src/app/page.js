@@ -112,11 +112,11 @@ export default async function Home() {
                   </p>
                 </div>
               </div>
-              <div className="mt-6 overflow-hidden rounded-xl border border-stone-200">
+              <div className="group mt-6 overflow-hidden rounded-xl border border-stone-200">
                 <img
                   src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1400&q=80"
                   alt="Modern quiet study room interior"
-                  className="h-52 w-full object-cover"
+                  className="h-52 w-full scale-110 object-cover transition-transform duration-500 ease-out will-change-transform group-hover:scale-100"
                   loading="lazy"
                 />
               </div>
