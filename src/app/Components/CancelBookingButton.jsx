@@ -3,16 +3,21 @@
 import { useRouter } from "next/navigation";
 import { AlertDialog, Button, toast } from "@heroui/react";
 import { RiCloseCircleLine } from "react-icons/ri";
+import { authClient } from "@/lib/auth-client";
 
 const CancelBookingButton = ({ bookingId }) => {
   const router = useRouter();
 
   const handleCancel = async (close) => {
+    const { data: tokenData } = await authClient.token();
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/bookings/${bookingId}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${tokenData?.token}`,
+          },
         },
       );
 
