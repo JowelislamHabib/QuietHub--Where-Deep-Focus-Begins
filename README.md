@@ -94,7 +94,7 @@ npm start
 |------------|-----------|
 | Browse rooms with filters (amenities, price, capacity) | Multi‑step form to add a new space |
 | View image galleries, floor, exact location | Edit or delete your listings |
-| Book a time slot with date & hour picker | See who booked your room (via bookings) |
+| Book a time slot with date & hour picker | See how many booked ( coming soon - who booked your room via bookings) |
 | Real‑time cost estimate | Manage your availability (coming soon) |
 | Reschedule or cancel upcoming bookings | |
 
