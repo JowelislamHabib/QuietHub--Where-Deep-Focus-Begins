@@ -94,7 +94,7 @@ const RoomDetails = async ({ params }) => {
               <div className="flex flex-wrap items-start justify-between gap-4 border-b border-stone-100 pb-6">
                 <div className="space-y-3">
                   <p className="text-xs font-semibold uppercase tracking-wide text-indigo-600">
-                    Focus space
+                    {room?.variant || "Quiet focus room"}
                   </p>
                   <h1 className="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
                     {room.name}
