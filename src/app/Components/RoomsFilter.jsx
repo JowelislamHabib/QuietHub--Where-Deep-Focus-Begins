@@ -96,11 +96,10 @@ const RoomsFilter = ({
                       type="button"
                       onClick={() => onAmenityChange(amenity)}
                       aria-pressed={selected}
-                      className={`max-w-full truncate rounded-full border px-3 py-2 text-left text-xs font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
-                        selected
-                          ? "border-indigo-200 bg-indigo-50 text-indigo-900 shadow-sm ring-1 ring-indigo-100/80"
-                          : "border-stone-200 bg-white text-stone-600 hover:border-stone-300 hover:bg-stone-50"
-                      }`}
+                      className={`max-w-full cursor-pointer truncate rounded-full border px-3 py-2 text-left text-xs font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${selected
+                        ? "border-indigo-200 bg-indigo-50 text-indigo-900 shadow-sm ring-1 ring-indigo-100/80"
+                        : "border-stone-200 bg-white text-stone-600 hover:border-indigo-200 hover:bg-indigo-100"
+                        }`}
                     >
                       {amenity}
                     </button>

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Avatar, Button } from "@heroui/react";
 import {
   RiAddLine,
+  RiAdminLine,
   RiArrowRightLine,
   RiBuildingLine,
   RiCalendarCheckLine,
@@ -23,6 +24,7 @@ import { authClient } from "@/lib/auth-client";
 import { formatDisplayTime } from "@/lib/booking-time";
 import AnimatedCounter from "@/app/Components/AnimatedCounter";
 import { UserUpdate } from "@/app/Components/UserUpdate";
+import { data } from "motion/react-client";
 
 const surfaceCard =
   "overflow-hidden rounded-3xl border border-stone-200/90 bg-white/90 shadow-sm ring-1 ring-stone-900/5";
@@ -79,13 +81,21 @@ const MyProfilePage = () => {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
+  console.log(user);
 
   const [bookings, setBookings] = useState([]);
   const [listingCount, setListingCount] = useState(0);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
 
   useEffect(() => {
+    authClient.admin
+      .hasPermission({ permissions: { user: ["list"] } })
+      .then(({ data }) => {
+        (setHasPermission(data?.success ?? false), []);
+      });
+
     if (!user?.id) {
       setIsLoadingStats(false);
       return;
@@ -96,10 +106,21 @@ const MyProfilePage = () => {
     const loadStats = async () => {
       setIsLoadingStats(true);
       try {
+        const { data: tokenData } = await authClient.token();
+        const headers = tokenData?.token
+          ? { Authorization: `Bearer ${tokenData.token}` }
+          : {};
+
         const base = process.env.NEXT_PUBLIC_SERVER_URL;
         const [bookingsRes, listingsRes] = await Promise.all([
-          fetch(`${base}/my-bookings/${user.id}`, { cache: "no-store" }),
-          fetch(`${base}/my-listings/${user.id}`, { cache: "no-store" }),
+          fetch(`${base}/my-bookings/${user.id}`, {
+            cache: "no-store",
+            headers,
+          }),
+          fetch(`${base}/my-listings/${user.id}`, {
+            cache: "no-store",
+            headers,
+          }),
         ]);
 
         if (cancelled) return;
@@ -108,9 +129,7 @@ const MyProfilePage = () => {
         const listingsData = await listingsRes.json();
 
         setBookings(Array.isArray(bookingsData) ? bookingsData : []);
-        setListingCount(
-          Array.isArray(listingsData) ? listingsData.length : 0,
-        );
+        setListingCount(Array.isArray(listingsData) ? listingsData.length : 0);
       } catch {
         if (!cancelled) {
           setBookings([]);
@@ -192,7 +211,7 @@ const MyProfilePage = () => {
               <div className="min-w-0 space-y-3">
                 <p className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-indigo-700 shadow-sm ring-1 ring-indigo-100">
                   <RiSparklingLine className="size-3.5" />
-                  Your profile
+                  Your role: ({user?.role})
                 </p>
                 <h1 className="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
                   {isPending ? "Loading…" : (user?.name ?? "Guest")}
@@ -233,6 +252,15 @@ const MyProfilePage = () => {
                 <RiLogoutBoxLine className="size-4" />
                 Sign out
               </Button>
+              {hasPermission && (
+                <Link
+                  href="/admin"
+                  className="flex h-11 items-center gap-2 rounded-full border border-indigo-100 bg-white px-5 text-sm font-semibold text-indigo-700 shadow-sm transition-all hover:bg-indigo-50"
+                >
+                  <RiAdminLine className="size-4" />
+                  Admin dashboard
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -345,7 +373,9 @@ const MyProfilePage = () => {
                   <RiCalendarCheckLine className="size-7" />
                 </span>
                 <div>
-                  <p className="font-semibold text-stone-900">No bookings yet</p>
+                  <p className="font-semibold text-stone-900">
+                    No bookings yet
+                  </p>
                   <p className="mt-1 text-sm text-stone-500">
                     Reserve a focus room to see sessions here.
                   </p>
@@ -454,10 +484,7 @@ const MyProfilePage = () => {
                     ]
                   : []),
               ].map(({ icon: Icon, label, value, breakAll }) => (
-                <div
-                  key={label}
-                  className="flex items-start gap-3 px-6 py-4"
-                >
+                <div key={label} className="flex items-start gap-3 px-6 py-4">
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
                     <Icon className="size-4" />
                   </span>
