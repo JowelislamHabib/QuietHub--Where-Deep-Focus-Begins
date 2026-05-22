@@ -8,13 +8,13 @@ import {
   RiArrowLeftLine,
   RiDeleteBinLine,
   RiEdit2Line,
-  RiEyeLine,
   RiMailLine,
   RiSearch2Line,
   RiShieldUserLine,
   RiUser3Line,
   RiUserStarLine,
 } from "react-icons/ri";
+import ImpersonateButton from "@/app/Components/ImpersonateButton";
 
 const getRoleStyles = (role) => {
   switch (role) {
@@ -231,10 +231,8 @@ const AdminPage = async () => {
                       {/* ACTIONS */}
                       <td className="px-6 py-5">
                         <div className="flex items-center justify-end gap-2">
-                          {/* VIEW */}
-                          <button className="flex size-10 items-center justify-center rounded-xl border border-stone-200 bg-white text-stone-600 transition-all hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700">
-                            <RiEyeLine className="size-4" />
-                          </button>
+                          {/* VIEW / IMPERSONATE */}
+                          <ImpersonateButton userId={user.id} userName={user.name} />
 
                           {/* EDIT */}
                           <button className="flex size-10 items-center justify-center rounded-xl border border-stone-200 bg-white text-stone-600 transition-all hover:border-amber-200 hover:bg-amber-50 hover:text-amber-700">
