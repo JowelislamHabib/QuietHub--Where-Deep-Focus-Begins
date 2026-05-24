@@ -8,7 +8,7 @@ import SuccessStoriesCarousel from "./Components/SuccessStoriesCarousel";
 const getRooms = async () => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms`, {
-      cache: "no-store",
+
     });
     const data = await res.json();
     const roomList = Array.isArray(data) ? data : [];

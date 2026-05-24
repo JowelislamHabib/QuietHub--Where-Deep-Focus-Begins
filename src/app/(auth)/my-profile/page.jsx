@@ -114,11 +114,9 @@ const MyProfilePage = () => {
         const base = process.env.NEXT_PUBLIC_SERVER_URL;
         const [bookingsRes, listingsRes] = await Promise.all([
           fetch(`${base}/my-bookings/${user.id}`, {
-            cache: "no-store",
             headers,
           }),
           fetch(`${base}/my-listings/${user.id}`, {
-            cache: "no-store",
             headers,
           }),
         ]);

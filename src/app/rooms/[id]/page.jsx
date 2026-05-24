@@ -16,9 +16,10 @@ import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`, {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`,
+    {},
+  );
 
   if (!res.ok) {
     return { title: "Room Not Found" };
@@ -30,9 +31,10 @@ export async function generateMetadata({ params }) {
 
 const RoomDetails = async ({ params }) => {
   const { id } = await params;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`, {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${id}`,
+    {},
+  );
   const room = await res.json();
 
   if (!res.ok || !room?._id) {
