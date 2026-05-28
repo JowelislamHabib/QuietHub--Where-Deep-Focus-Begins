@@ -28,6 +28,7 @@ export const metadata = {
 const normalizeBookingStatus = (status) => {
   const value = String(status || "confirmed").toLowerCase();
   if (value === "cancelled" || value === "canceled") return "cancelled";
+  if (value === "pending" || value === "pending_payment") return "pending";
   return "confirmed";
 };
 
@@ -41,6 +42,7 @@ const getDisplayStatus = (booking) => {
 
 const statusBadgeStyles = {
   confirmed: "bg-emerald-50 text-emerald-700 ring-emerald-200/80",
+  pending: "bg-amber-50 text-amber-700 ring-amber-200/80",
   cancelled: "bg-rose-50 text-rose-700 ring-rose-200/80",
   completed: "bg-stone-100 text-stone-600 ring-stone-200/80",
 };
@@ -48,11 +50,15 @@ const statusBadgeStyles = {
 const sortBookings = (bookings) =>
   [...bookings].sort((a, b) => {
     const aUpcoming =
-      getDisplayStatus(a) === "confirmed" || getDisplayStatus(a) === "cancelled"
+      getDisplayStatus(a) === "confirmed" ||
+      getDisplayStatus(a) === "cancelled" ||
+      getDisplayStatus(a) === "pending"
         ? isBookingOnOrAfterToday(a.date)
         : false;
     const bUpcoming =
-      getDisplayStatus(b) === "confirmed" || getDisplayStatus(b) === "cancelled"
+      getDisplayStatus(b) === "confirmed" ||
+      getDisplayStatus(b) === "cancelled" ||
+      getDisplayStatus(b) === "pending"
         ? isBookingOnOrAfterToday(b.date)
         : false;
 
@@ -107,7 +113,7 @@ const MyBookingsPage = async () => {
       if (displayStatus === "completed") acc.completed += 1;
       else if (displayStatus === "cancelled") acc.cancelled += 1;
       else if (
-        displayStatus === "confirmed" &&
+        (displayStatus === "confirmed" || displayStatus === "pending") &&
         isBookingOnOrAfterToday(booking.date)
       ) {
         acc.active += 1;

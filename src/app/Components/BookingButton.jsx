@@ -113,35 +113,65 @@ const BookingButton = ({ room }) => {
       userEmail: user?.email,
       userName: user?.name,
     };
-    console.log(reservationData);
 
-    const { data: tokenData } = await authClient.token();
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${tokenData?.token}`,
-      },
-      body: JSON.stringify(reservationData),
-    });
-
-    const data = await res.json();
-
-    if (res.ok && data?.success !== false) {
-      toast.success("Reservation created", {
-        actionProps: {
-          children: "View Reservations",
-          onPress: () => {
-            router.push(`/my-bookings`);
-          },
-          className:
-            "bg-indigo-500 text-white font-medium rounded-full text-sm normal-case px-4 py-1 hover:bg-indigo-600",
+    try {
+      const paymentPayload = {
+        full_name: user?.name || "QuietHub User",
+        email_address: user?.email,
+        email_mobile: user?.email,
+        mobile_number: user?.phoneNumber || user?.phone || user?.email,
+        amount: Number(computedCost).toFixed(2),
+        currency: "BDT",
+        metadata: {
+          type: "room_booking",
+          roomId: room?._id,
+          roomName: room?.name,
+          userId: user?.id,
+          booking: reservationData,
         },
-        description: "Your quiet focus session reservation is active.",
-      });
-    } else {
-      toast.danger(data.message || "Failed to create reservation");
+        return_type: "GET",
+      };
+
+      const paymentRes = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/payments/piprapay/create-charge`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(paymentPayload),
+        },
+      );
+
+      const paymentData = await paymentRes.json();
+
+      if (!paymentRes.ok || paymentData?.success === false) {
+        const providerMessage =
+          paymentData?.piprapay?.error?.message ||
+          paymentData?.piprapay_raw ||
+          paymentData?.message;
+        toast.danger(providerMessage || "Failed to initialize payment");
+        return;
+      }
+
+      const ppId = String(paymentData?.data?.pp_id || "");
+      const paymentUrl = paymentData?.data?.pp_url;
+
+      if (!ppId || !paymentUrl) {
+        toast.danger("Invalid payment session response");
+        return;
+      }
+
+      localStorage.setItem(
+        `pending-booking:${ppId}`,
+        JSON.stringify(reservationData),
+      );
+
+      window.location.assign(paymentUrl);
+    } catch (error) {
+      toast.danger("Failed to initialize payment");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -517,7 +547,7 @@ const BookingButton = ({ room }) => {
                           : "cursor-not-allowed bg-stone-200 text-stone-400"
                       }`}
                     >
-                      Confirm Reservation
+                      Pay & Confirm Reservation
                     </Button>
                   </Modal.Footer>
                 </form>
