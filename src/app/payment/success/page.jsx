@@ -7,9 +7,22 @@ import { useSearchParams } from "next/navigation";
 const PaymentSuccessPage = () => {
   const searchParams = useSearchParams();
 
-  const ppId = useMemo(() => searchParams.get("pp_id") || "", [searchParams]);
+  const ppId = useMemo(
+    () =>
+      searchParams.get("pp_id") ||
+      searchParams.get("invoice_id") ||
+      searchParams.get("transaction_ref") ||
+      searchParams.get("ppid") ||
+      "",
+    [searchParams],
+  );
   const returnedStatus = useMemo(
-    () => (searchParams.get("status") || "").toLowerCase(),
+    () =>
+      (
+        searchParams.get("status") ||
+        searchParams.get("pp_status") ||
+        ""
+      ).toLowerCase(),
     [searchParams],
   );
 
@@ -21,7 +34,7 @@ const PaymentSuccessPage = () => {
     const syncPaymentAfterReturn = async () => {
       if (!ppId) {
         setStatus("failed");
-        setMessage("Missing payment reference (pp_id).");
+        setMessage("Missing payment reference (pp_id/invoice_id/transaction_ref).");
         setIsProcessing(false);
         return;
       }
