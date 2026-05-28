@@ -15,6 +15,8 @@ import { useRouter } from "next/navigation";
 import { RiArrowDownSLine, RiCalendarEventLine } from "react-icons/ri";
 import {
   buildHoursOptions,
+  formatDisplayTime,
+  getMaxBookingDuration,
   parseBookingDate,
   parseBookingHour,
 } from "@/lib/booking-time";
@@ -53,28 +55,39 @@ const RescheduleBookingButton = ({ booking }) => {
   const [selectedDate, setSelectedDate] = useState(() =>
     clampToMinDate(toCalendarDate(booking.date), minSelectableDate),
   );
-  const [startTime, setStartTime] = useState(
-    parseBookingHour(booking.startTime),
-  );
-  const [endTime, setEndTime] = useState(parseBookingHour(booking.endTime));
+  const initialStartHour = parseBookingHour(booking.startTime);
+  const initialEndHour = parseBookingHour(booking.endTime);
+  const initialDuration = Math.max(Number(initialEndHour) - Number(initialStartHour), 1);
+  const [startHour, setStartHour] = useState(initialStartHour);
+  const [durationHours, setDurationHours] = useState(String(initialDuration));
   const [loading, setLoading] = useState(false);
 
-  const hoursOptions = buildHoursOptions();
+  const startTimeOptions = buildHoursOptions().filter(
+    (option) => Number(option.value) >= 9 && Number(option.value) < 22,
+  );
+  const maxDuration = startHour ? getMaxBookingDuration(startHour) : 0;
+  const durationOptions = Array.from({ length: maxDuration }, (_, idx) => {
+    const value = String(idx + 1);
+    return {
+      value,
+      label: `${value} ${value === "1" ? "hour" : "hours"}`,
+    };
+  });
 
-  const handleStartTimeChange = (newStart) => {
-    setStartTime(newStart);
-
-    if (Number(newStart) >= Number(endTime)) {
-      const nextHour = (Number(newStart) + 1).toString().padStart(2, "0");
-      setEndTime(nextHour === "24" ? "23" : nextHour);
-    }
-  };
+  const selectedSlotData = startHour
+    ? {
+        startHour,
+        endHour: String(Number(startHour) + Number(durationHours)).padStart(2, "0"),
+        startTime: `${startHour}:00`,
+        endTime: `${String(Number(startHour) + Number(durationHours)).padStart(2, "0")}:00`,
+      }
+    : null;
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (Number(startTime) >= Number(endTime)) {
-      toast.danger("End time must be after start time");
+    if (!selectedSlotData) {
+      toast.danger("Please select a start time");
       return;
     }
 
@@ -85,7 +98,8 @@ const RescheduleBookingButton = ({ booking }) => {
 
     const { data: tokenData } = await authClient.token();
 
-    const duration = Number(endTime) - Number(startTime);
+    const duration =
+      Number(selectedSlotData.endHour) - Number(selectedSlotData.startHour);
     const totalCost = duration * hourlyRate;
     const date = selectedDate.toString();
 
@@ -102,8 +116,8 @@ const RescheduleBookingButton = ({ booking }) => {
           },
           body: JSON.stringify({
             date,
-            startTime: `${startTime}:00`,
-            endTime: `${endTime}:00`,
+            startTime: selectedSlotData.startTime,
+            endTime: selectedSlotData.endTime,
             totalCost,
           }),
         },
@@ -126,34 +140,28 @@ const RescheduleBookingButton = ({ booking }) => {
 
   return (
     <Modal className="w-full">
-      <Button className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 text-sm font-medium text-white transition-colors hover:bg-indigo-700">
+      <Button className="group inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 text-sm font-medium text-white shadow-md shadow-indigo-600/25 transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-600/30 active:scale-[0.98]">
         <RiCalendarEventLine className="size-4" />
         Reschedule
       </Button>
 
-      <Modal.Backdrop className="bg-stone-900/40 backdrop-blur-sm">
+      <Modal.Backdrop className="bg-black/50 backdrop-blur-sm">
         <Modal.Container placement="center">
-          <Modal.Dialog className="sm:max-w-lg overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-2xl">
-            <Modal.CloseTrigger className="top-5 right-5 text-stone-400 transition-colors hover:text-indigo-600" />
+          <Modal.Dialog className="w-full max-w-md overflow-visible rounded-2xl border border-stone-200 bg-white p-0 shadow-2xl">
+            <Modal.CloseTrigger />
 
-            <Modal.Header className="flex flex-col gap-1 border-b border-stone-200 bg-stone-50 p-8 pb-6">
-              <div className="flex items-center gap-4">
-                <span className="flex items-center justify-center rounded-xl bg-indigo-50 p-3 text-indigo-600">
-                  <RiCalendarEventLine className="size-6" />
-                </span>
-                <div>
-                  <Modal.Heading className="text-2xl font-bold text-gray-900">
-                    Reschedule booking
-                  </Modal.Heading>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Pick a new date and hourly slot for {roomName}.
-                  </p>
-                </div>
-              </div>
-            </Modal.Header>
+            <form onSubmit={onSubmit}>
+              <Modal.Header className="space-y-1 border-b border-stone-100 px-5 pb-4 pt-5 pr-12">
+                <Modal.Heading className="text-lg font-semibold text-stone-900">
+                  Reschedule booking
+                </Modal.Heading>
+                <p className="text-sm text-stone-500">
+                  Pick a new date, start time, and duration for{" "}
+                  <span className="font-medium text-stone-800">{roomName}</span>.
+                </p>
+              </Modal.Header>
 
-            <Modal.Body className="space-y-4 overflow-visible p-8">
-              <form onSubmit={onSubmit} className="space-y-6">
+              <Modal.Body className="space-y-4 overflow-visible px-5 py-4">
                 <DatePicker
                   className="w-full"
                   name="date"
@@ -230,19 +238,32 @@ const RescheduleBookingButton = ({ booking }) => {
                   <div>
                     <label
                       className={fieldLabelClass}
-                      htmlFor="reschedule-start"
+                      htmlFor="reschedule-start-time"
                     >
-                      Start
+                      Start time
                     </label>
                     <div className="relative">
                       <select
-                        id="reschedule-start"
-                        required
-                        value={startTime}
-                        onChange={(e) => handleStartTimeChange(e.target.value)}
+                        id="reschedule-start-time"
+                        value={startHour}
+                        onChange={(e) => {
+                          const nextStart = e.target.value;
+                          setStartHour(nextStart);
+                          const nextMax = nextStart
+                            ? getMaxBookingDuration(nextStart)
+                            : 0;
+                          if (!nextStart) {
+                            setDurationHours("1");
+                            return;
+                          }
+                          if (Number(durationHours) > nextMax) {
+                            setDurationHours(String(nextMax));
+                          }
+                        }}
                         className={timeSelectClassName}
                       >
-                        {hoursOptions.slice(0, -1).map((option) => (
+                        <option value="">None</option>
+                        {startTimeOptions.map((option) => (
                           <option key={option.value} value={option.value}>
                             {option.label}
                           </option>
@@ -256,26 +277,26 @@ const RescheduleBookingButton = ({ booking }) => {
                   </div>
 
                   <div>
-                    <label className={fieldLabelClass} htmlFor="reschedule-end">
-                      End
+                    <label className={fieldLabelClass} htmlFor="reschedule-duration">
+                      Duration
                     </label>
                     <div className="relative">
                       <select
-                        id="reschedule-end"
-                        required
-                        value={endTime}
-                        onChange={(e) => setEndTime(e.target.value)}
+                        id="reschedule-duration"
+                        value={durationHours}
+                        onChange={(e) => setDurationHours(e.target.value)}
                         className={timeSelectClassName}
+                        disabled={!startHour}
                       >
-                        {hoursOptions.map((option) => (
-                          <option
-                            key={option.value}
-                            value={option.value}
-                            disabled={Number(option.value) <= Number(startTime)}
-                          >
-                            {option.label}
-                          </option>
-                        ))}
+                        {!startHour ? (
+                          <option value="1">Select start first</option>
+                        ) : (
+                          durationOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))
+                        )}
                       </select>
                       <RiArrowDownSLine
                         aria-hidden
@@ -285,25 +306,37 @@ const RescheduleBookingButton = ({ booking }) => {
                   </div>
                 </div>
 
-                <div className="flex gap-4 border-t border-stone-200 pt-6">
-                  <Button
-                    slot="close"
-                    variant="flat"
-                    className="h-12 flex-1 rounded-xl bg-stone-100 text-sm font-semibold text-stone-600 transition-colors hover:bg-stone-200"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    slot="close"
-                    isLoading={loading}
-                    className="h-12 flex-[2] rounded-xl bg-indigo-600 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition-colors hover:bg-indigo-700"
-                  >
-                    Save changes
-                  </Button>
-                </div>
-              </form>
-            </Modal.Body>
+                {selectedSlotData && (
+                  <div className="rounded-xl bg-stone-50 px-4 py-3 ring-1 ring-stone-200/60">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-500">
+                      Booking preview
+                    </p>
+                    <p className="mt-1 text-sm text-stone-700">
+                      {formatDisplayTime(selectedSlotData.startTime)} -{" "}
+                      {formatDisplayTime(selectedSlotData.endTime)} ({durationHours}{" "}
+                      {durationHours === "1" ? "hour" : "hours"})
+                    </p>
+                  </div>
+                )}
+              </Modal.Body>
+
+              <Modal.Footer className="flex items-center justify-end gap-3 border-t border-stone-100 px-5 py-4">
+                <Button
+                  slot="close"
+                  className="h-10 rounded-full border-0 bg-transparent px-3 text-sm font-medium text-stone-600 hover:bg-stone-100"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  slot="close"
+                  isLoading={loading}
+                  className="h-10 rounded-full bg-indigo-600 px-5 text-sm font-medium text-white transition-all hover:bg-indigo-700"
+                >
+                  Save changes
+                </Button>
+              </Modal.Footer>
+            </form>
           </Modal.Dialog>
         </Modal.Container>
       </Modal.Backdrop>

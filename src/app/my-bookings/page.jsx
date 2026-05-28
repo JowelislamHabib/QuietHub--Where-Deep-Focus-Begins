@@ -254,8 +254,12 @@ const MyBookingsPage = async () => {
               const isCompleted = status === "completed";
               const isCancelled = status === "cancelled";
               const isUpcoming = isBookingOnOrAfterToday(booking.date);
+              const paymentCompleted =
+                String(booking.paymentStatus || "").toLowerCase() ===
+                "completed";
               const canReschedule =
-                isCancelled || (status === "confirmed" && isUpcoming);
+                paymentCompleted &&
+                (isCancelled || (status === "confirmed" && isUpcoming));
               const canCancel = status === "confirmed" && isUpcoming;
 
               return (

@@ -22,7 +22,11 @@ import {
   RiUserLine,
 } from "react-icons/ri";
 import { authClient } from "@/lib/auth-client";
-import { buildHoursOptions } from "@/lib/booking-time";
+import {
+  buildHoursOptions,
+  formatDisplayTime,
+  getMaxBookingDuration,
+} from "@/lib/booking-time";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -34,6 +38,10 @@ const timeSelectClassName = `${fieldClassName} appearance-none pl-3 pr-9`;
 const BookingButton = ({ room }) => {
   const roomName = room?.name || "Focus Space Pod";
   const hourlyRate = Number(room?.hourlyRate) || 0;
+  const currency =
+    process.env.NEXT_PUBLIC_CURRENCY ||
+    room?.currency ||
+    "USD";
   const capacity = room?.capacity ?? 1;
   const floor = room?.floor;
   const amenities = room?.amenities ?? [];
@@ -45,8 +53,8 @@ const BookingButton = ({ room }) => {
 
   const [selectedDate, setSelectedDate] = useState(minSelectableDate);
 
-  const [startTime, setStartTime] = useState("09");
-  const [endTime, setEndTime] = useState("10");
+  const [startHour, setStartHour] = useState("");
+  const [durationHours, setDurationHours] = useState("1");
   const [note, setNote] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -57,10 +65,31 @@ const BookingButton = ({ room }) => {
     }, 100);
   }, []);
 
-  const hoursOptions = buildHoursOptions();
+  const startTimeOptions = buildHoursOptions().filter(
+    (option) => Number(option.value) >= 9 && Number(option.value) < 22,
+  );
+  const maxDuration = startHour ? getMaxBookingDuration(startHour) : 0;
+  const durationOptions = Array.from({ length: maxDuration }, (_, idx) => {
+    const value = String(idx + 1);
+    return {
+      value,
+      label: `${value} ${value === "1" ? "hour" : "hours"}`,
+    };
+  });
+
+  const selectedSlotData = startHour
+    ? {
+        startHour,
+        endHour: String(Number(startHour) + Number(durationHours)).padStart(2, "0"),
+        startTime: `${startHour}:00`,
+        endTime: `${String(Number(startHour) + Number(durationHours)).padStart(2, "0")}:00`,
+      }
+    : null;
 
   const calculateTotalCost = () => {
-    const duration = Number(endTime) - Number(startTime);
+    if (!selectedSlotData) return 0;
+    const duration =
+      Number(selectedSlotData.endHour) - Number(selectedSlotData.startHour);
 
     if (duration <= 0 || isNaN(duration)) return 0;
 
@@ -69,22 +98,12 @@ const BookingButton = ({ room }) => {
 
   const computedCost = calculateTotalCost();
 
-  const handleStartTimeChange = (newStart) => {
-    setStartTime(newStart);
-
-    if (Number(newStart) >= Number(endTime)) {
-      const nextHour = (Number(newStart) + 1).toString().padStart(2, "0");
-
-      setEndTime(nextHour === "24" ? "23" : nextHour);
-    }
-  };
-
   const { data: session } = authClient.useSession();
   const user = session?.user;
 
   const handleReservation = async () => {
-    if (Number(startTime) >= Number(endTime)) {
-      toast.danger("End time must be after start time");
+    if (!selectedSlotData) {
+      toast.danger("Please select a start time");
       return;
     }
 
@@ -104,8 +123,8 @@ const BookingButton = ({ room }) => {
       roomId: room?._id,
       roomName: room?.name,
       date: selectedDate?.toString(),
-      startTime: `${startTime}:00`,
-      endTime: `${endTime}:00`,
+      startTime: selectedSlotData.startTime,
+      endTime: selectedSlotData.endTime,
       note,
       totalCost: computedCost,
       hourlyRate: hourlyRate,
@@ -121,7 +140,7 @@ const BookingButton = ({ room }) => {
         email_mobile: user?.email,
         mobile_number: user?.phoneNumber || user?.phone || user?.email,
         amount: Number(computedCost).toFixed(2),
-        currency: "BDT",
+        currency,
         metadata: {
           type: "room_booking",
           roomId: room?._id,
@@ -357,7 +376,7 @@ const BookingButton = ({ room }) => {
                       Reserve Your Room
                     </Modal.Heading>
                     <p className="text-sm text-stone-500">
-                      Pick a date and time slot for{" "}
+                      Pick a date, start time, and duration for{" "}
                       <span className="font-medium text-stone-800">
                         {roomName}
                       </span>
@@ -441,19 +460,30 @@ const BookingButton = ({ room }) => {
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className={fieldLabelClass} htmlFor="start-time">
-                          Start
+                          Start time
                         </label>
                         <div className="relative">
                           <select
                             id="start-time"
-                            required
-                            value={startTime}
-                            onChange={(e) =>
-                              handleStartTimeChange(e.target.value)
-                            }
+                            value={startHour}
+                            onChange={(e) => {
+                              const nextStart = e.target.value;
+                              setStartHour(nextStart);
+                              const nextMax = nextStart
+                                ? getMaxBookingDuration(nextStart)
+                                : 0;
+                              if (!nextStart) {
+                                setDurationHours("1");
+                                return;
+                              }
+                              if (Number(durationHours) > nextMax) {
+                                setDurationHours(String(nextMax));
+                              }
+                            }}
                             className={timeSelectClassName}
                           >
-                            {hoursOptions.slice(0, -1).map((option) => (
+                            <option value="">None</option>
+                            {startTimeOptions.map((option) => (
                               <option key={option.value} value={option.value}>
                                 {option.label}
                               </option>
@@ -467,28 +497,26 @@ const BookingButton = ({ room }) => {
                       </div>
 
                       <div>
-                        <label className={fieldLabelClass} htmlFor="end-time">
-                          End
+                        <label className={fieldLabelClass} htmlFor="slot-duration">
+                          Duration
                         </label>
                         <div className="relative">
                           <select
-                            id="end-time"
-                            required
-                            value={endTime}
-                            onChange={(e) => setEndTime(e.target.value)}
+                            id="slot-duration"
+                            value={durationHours}
+                            onChange={(e) => setDurationHours(e.target.value)}
                             className={timeSelectClassName}
+                            disabled={!startHour}
                           >
-                            {hoursOptions.map((option) => (
-                              <option
-                                key={option.value}
-                                value={option.value}
-                                disabled={
-                                  Number(option.value) <= Number(startTime)
-                                }
-                              >
-                                {option.label}
-                              </option>
-                            ))}
+                            {!startHour ? (
+                              <option value="1">Select start first</option>
+                            ) : (
+                              durationOptions.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))
+                            )}
                           </select>
                           <RiArrowDownSLine
                             aria-hidden
@@ -497,6 +525,20 @@ const BookingButton = ({ room }) => {
                         </div>
                       </div>
                     </div>
+
+                    {selectedSlotData && (
+                      <div className="rounded-xl bg-stone-50 px-4 py-3 ring-1 ring-stone-200/60">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-500">
+                          Booking preview
+                        </p>
+                        <p className="mt-1 text-sm text-stone-700">
+                          {formatDisplayTime(selectedSlotData.startTime)} -{" "}
+                          {formatDisplayTime(selectedSlotData.endTime)} (
+                          {durationHours}{" "}
+                          {durationHours === "1" ? "hour" : "hours"})
+                        </p>
+                      </div>
+                    )}
 
                     <div>
                       <label className={fieldLabelClass} htmlFor="booking-note">
@@ -557,7 +599,7 @@ const BookingButton = ({ room }) => {
         </Modal>
 
         <p className="text-center text-xs leading-relaxed text-stone-400">
-          Pick a date and hourly slot · billed by the hour
+          Pick start time plus total hours
         </p>
       </div>
     </aside>

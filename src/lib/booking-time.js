@@ -11,6 +11,85 @@ export const buildHoursOptions = () =>
     return { value, label: formatHourLabel(value) };
   });
 
+export const formatSlotLabel = (startHour24, endHour24) => {
+  const startHour = Number(startHour24);
+  const endHour = Number(endHour24);
+
+  if (Number.isNaN(startHour) || Number.isNaN(endHour)) return "";
+
+  const formatBoundary = (hour) => {
+    const normalized = ((hour % 24) + 24) % 24;
+    const suffix = normalized >= 12 ? "PM" : "AM";
+    const displayHour = normalized % 12 || 12;
+    return `${String(displayHour).padStart(2, "0")}:00 ${suffix}`;
+  };
+
+  return `${formatBoundary(startHour)} - ${formatBoundary(endHour)}`;
+};
+
+export const buildBookingSlotOptions = (startHour = 9, endHour = 22) => {
+  const safeStart = Number(startHour);
+  const safeEnd = Number(endHour);
+  if (Number.isNaN(safeStart) || Number.isNaN(safeEnd) || safeEnd <= safeStart) {
+    return [];
+  }
+
+  return Array.from({ length: safeEnd - safeStart }, (_, idx) => {
+    const start = safeStart + idx;
+    const end = start + 1;
+    const startValue = String(start).padStart(2, "0");
+    const endValue = String(end).padStart(2, "0");
+
+    return {
+      value: `${startValue}-${endValue}`,
+      startTime: `${startValue}:00`,
+      endTime: `${endValue}:00`,
+      label: formatSlotLabel(startValue, endValue),
+    };
+  });
+};
+
+export const buildBookingStartSlotOptions = (startHour = 9, endHour = 22) => {
+  const safeStart = Number(startHour);
+  const safeEnd = Number(endHour);
+  if (Number.isNaN(safeStart) || Number.isNaN(safeEnd) || safeEnd <= safeStart) {
+    return [];
+  }
+
+  return Array.from({ length: safeEnd - safeStart }, (_, idx) => {
+    const start = safeStart + idx;
+    const end = start + 1;
+    const startValue = String(start).padStart(2, "0");
+    const endValue = String(end).padStart(2, "0");
+
+    return {
+      value: startValue,
+      label: formatSlotLabel(startValue, endValue),
+    };
+  });
+};
+
+export const getMaxBookingDuration = (startHour, endHour = 22) => {
+  const start = Number(startHour);
+  const safeEnd = Number(endHour);
+  if (Number.isNaN(start) || Number.isNaN(safeEnd)) return 0;
+  return Math.max(safeEnd - start, 0);
+};
+
+export const parseBookingSlotValue = (slotValue) => {
+  if (!slotValue) return null;
+  const [start, end] = String(slotValue).split("-");
+  if (!start || !end) return null;
+  const startHour = start.padStart(2, "0");
+  const endHour = end.padStart(2, "0");
+  return {
+    startHour,
+    endHour,
+    startTime: `${startHour}:00`,
+    endTime: `${endHour}:00`,
+  };
+};
+
 export const parseBookingHour = (time) => {
   if (!time) return "09";
   const [hours] = String(time).split(":");
