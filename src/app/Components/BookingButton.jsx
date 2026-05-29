@@ -16,6 +16,7 @@ import {
   RiArrowDownSLine,
   RiCalendarCheckLine,
   RiCheckboxCircleLine,
+  RiLoaderLine,
   RiLoginBoxLine,
   RiMapPinLine,
   RiSparklingLine,
@@ -102,6 +103,8 @@ const BookingButton = ({ room }) => {
   const user = session?.user;
 
   const handleReservation = async () => {
+    if (isLoading) return;
+
     if (!selectedSlotData) {
       toast.danger("Please select a start time");
       return;
@@ -170,6 +173,7 @@ const BookingButton = ({ room }) => {
           paymentData?.piprapay_raw ||
           paymentData?.message;
         toast.danger(providerMessage || "Failed to initialize payment");
+        setIsLoading(false);
         return;
       }
 
@@ -178,6 +182,7 @@ const BookingButton = ({ room }) => {
 
       if (!ppId || !paymentUrl) {
         toast.danger("Invalid payment session response");
+        setIsLoading(false);
         return;
       }
 
@@ -189,7 +194,6 @@ const BookingButton = ({ room }) => {
       window.location.assign(paymentUrl);
     } catch (error) {
       toast.danger("Failed to initialize payment");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -362,8 +366,30 @@ const BookingButton = ({ room }) => {
 
           <Modal.Backdrop className="bg-black/50 backdrop-blur-sm">
             <Modal.Container placement="center">
-              <Modal.Dialog className="w-full max-w-md overflow-visible rounded-2xl border border-stone-200 bg-white p-0 shadow-2xl">
-                <Modal.CloseTrigger />
+              <Modal.Dialog className="relative w-full max-w-md overflow-hidden rounded-2xl border border-stone-200 bg-white p-0 shadow-2xl">
+                {isLoading && (
+                  <div
+                    className="absolute inset-0 z-50 flex flex-col items-center justify-center rounded-2xl bg-white/95 px-6 backdrop-blur-sm"
+                    role="status"
+                    aria-live="polite"
+                    aria-busy="true"
+                  >
+                    <RiLoaderLine
+                      className="size-10 animate-spin text-indigo-600"
+                      aria-hidden
+                    />
+                    <p className="mt-4 text-center text-sm font-semibold text-stone-900">
+                      Preparing secure payment
+                    </p>
+                    <p className="mt-1 text-center text-xs text-stone-500">
+                      Redirecting to checkout. Please do not close this window.
+                    </p>
+                  </div>
+                )}
+
+                <Modal.CloseTrigger
+                  className={isLoading ? "pointer-events-none opacity-40" : undefined}
+                />
 
                 <form
                   onSubmit={(e) => {
@@ -573,7 +599,8 @@ const BookingButton = ({ room }) => {
                   <Modal.Footer className="flex items-center justify-end gap-3 border-t border-stone-100 px-5 py-4">
                     <Button
                       slot="close"
-                      className="h-10 rounded-full border-0 bg-transparent px-3 text-sm font-medium text-stone-600 hover:bg-stone-100"
+                      isDisabled={isLoading}
+                      className="h-10 rounded-full border-0 bg-transparent px-3 text-sm font-medium text-stone-600 hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Cancel
                     </Button>
@@ -581,15 +608,16 @@ const BookingButton = ({ room }) => {
                     <Button
                       type="submit"
                       isLoading={isLoading}
-                      disabled={computedCost <= 0}
-                      slot="close"
+                      isDisabled={computedCost <= 0 || isLoading}
                       className={`h-10 rounded-full px-5 text-sm font-medium transition-all ${
-                        computedCost > 0
+                        computedCost > 0 && !isLoading
                           ? "bg-indigo-600 text-white hover:bg-indigo-700"
                           : "cursor-not-allowed bg-stone-200 text-stone-400"
                       }`}
                     >
-                      Pay & Confirm Reservation
+                      {isLoading
+                        ? "Redirecting..."
+                        : "Pay & Confirm Reservation"}
                     </Button>
                   </Modal.Footer>
                 </form>
